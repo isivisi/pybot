@@ -1,7 +1,6 @@
 # controller for pybot commands
 
 import os
-import sql
 import thread
 from pybotextra import * 
 

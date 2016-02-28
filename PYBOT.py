@@ -5,9 +5,8 @@
 import os
 from pybotextra import *
 import thread
-from settings import *
+from data import *
 import sys
-from sql import sql
 from irc import irc # yea its dumb
 
 
@@ -18,15 +17,13 @@ PWD = os.getcwd()
 
 def main():
     pybotPrint("PYBOT %s VERSION %s BUILD %s" % (PYBOT_VERSION["status"], PYBOT_VERSION["version"], PYBOT_VERSION["build"]), "usermsg")
-    mysql = sql()
-
-    loadFromSettings = False
 
     try:
         channel = sys.argv[1]
     except:
         loadFromSettings = True
     settings = Settings()
+    data = Data()
 
     if (len(settings.filters) <= 0):
         pybotPrint("[PYBOT] Running with no filters")
@@ -34,7 +31,7 @@ def main():
     # create the irc connection and set the hook for the incoming feed
     con = None
 
-    con = irc(settings.HOST, settings.PORT, "#"+settings.channel, settings.NAME, settings.AUTH ,feed, settings.filters, mysql) # secure to be 6697
+    con = irc(settings.HOST, settings.PORT, "#"+settings.channel, settings.NAME, settings.AUTH ,feed, settings.filters, data) # secure to be 6697
 
     thread.start_new_thread(con.connect, ())
 
@@ -106,33 +103,33 @@ def feed(con, msg, event):
                 con.msg('%s, you do not have access to this command.' % name)
         elif "!plinkgrabber" in text:
             if con.isMod(name):
-                if (con.linkgrabber == True):
+                if (con.linkgrabber):
                     con.linkgrabber = False
                     con.msg("Link grabber has been disabled!")
                 else:
-                    if con.getSetting("setting_linkgrabber"):
+                    if con.settings.linkgrabber:
                         con.linkgrabber = True
                         con.msg("Link grabber has been enabled! post your links!")
             else:
                 con.msg('%s, you do not have access to this command.' % name)
 
         elif "!quote" in text:
-            if con.getSetting("feature_quotes"):
+            if con.settings.quotes:
                 quote = text.replace("!quote", "")
                 if (quote.strip() != ""):
                     con.addQuote(name, text.replace("!quote", ""))
                     con.msg("Quote as been added.")
                 else:
                     if (con.getRandomQuote()):
-                        con.msg('"%s" - %s' % (con.getRandomQuote(), con.user))
+                        con.msg(con.getRandomQuote())
 
         elif "!plinkban" in text:
             cmd_args = text.split(" ")
             if con.isMod(name):
-                try:
-                    con.linkBan(cmd_args[2])
-                except:
-                    con.msg("%s, syntax: !plinkban <name>" % name)
+                #try:
+                con.linkBan(cmd_args[2])
+                #except:
+                #    con.msg("%s, syntax: !plinkban <name>" % name)
             else:
                 con.msg("%s, you do not have access to this command." % name)
 

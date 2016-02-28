@@ -59,7 +59,7 @@ class chatters:
 
 # irc object
 class irc:
-    def __init__(self, server, port, channel, nick, password, hook, filters, db):
+    def __init__(self, server, port, channel, nick, password, hook, filters, d):
         self.server = server
         self.port = port
         self.channel = channel
@@ -77,13 +77,13 @@ class irc:
         self.totalUsers = 0
         self.users = {}
         self.filterDb = {}  											# if filters need persistent data. list of all created dictionaries
-        self.cmdc = cmdControl(self, db, self.channel)
-        self.linkgrabber = False
-        self.linkbanned = []
+        #self.cmdc = cmdControl(self, db, self.channel)
         self.botIsMod = False
         self.closed = False
         self.chatters = chatters(self.user, self)
-        self.mysql = db
+        self.settings = Settings()
+        self.data = d
+        self.linkgrabber = False
 
         self.filters = []
         for i in filters:
@@ -100,7 +100,6 @@ class irc:
         #thread.start_new_thread(self.getMods, ())
         thread.start_new_thread(self.checkMod, ()) # waits to see if mod
         thread.start_new_thread(self.chatTimeoutCheck, ())
-        thread.start_new_thread(self.getLinkBanned, ())
 
     def chatTimeoutCheck(self):
         time.sleep(60)
@@ -321,30 +320,27 @@ class irc:
             pybotPrint(e.message)
             self.retry()
 
-    def getLinkBanned(self):
-        result = self.mysql.query_r("SELECT name FROM linkBanned WHERE channel = '%s' " % self.channel);
-        for name in result:
-            self.linkbanned.append(name[0])
-
     def isLinkBanned(self, name):
-        if name in self.linkbanned:
+        if name in self.data.linkbanned:
             return True
         else:
             return False
 
     def linkBan(self, name):
-        if name not in self.linkbanned:
-            self.mysql.query("INSERT INTO linkBanned values ('%s', '%s')" % (name, self.channel))
-            self.msg(name + " can no longer add links")
-            self.linkbanned.append(name)
+        if name not in self.data.linkbanned:
+            self.data.linkbanned.append(name)
+            self.data.save()
+        else:
+            self.data.linkbanned.remove(name)
+            self.data.save()
 
     def addQuote(self, name, text):
-        self.mysql.query("INSERT INTO userQuote values (null, '%s', '%s', '%s')" % (self.channel, name, text))
+        self.data.quotes.append('"' + text + '" - ' + name)
+        self.data.save()
 
     def getRandomQuote(self):
-        result = self.mysql.query_r("SELECT * FROM userQuote WHERE userName = '%s'" % self.channel)
-        if (len(result) > 0):
-            return result[random.randint(0, len(result)-1)][3]
+        if (len(self.data.quotes) > 0):
+            return self.data.quotes[random.randint(0, len(self.data.quotes)-1)]
         return False
 
     def linkgrab(self, msg):
@@ -355,8 +351,10 @@ class irc:
         if self.isLinkBanned(name) == False:
             for filter in filters:
                 if filter in text.lower():
-                    print "link found!"
-                    self.mysql.query("INSERT INTO link values (null, '%s', '%s', '%s')" % (self.channel, text, name))
+                    pybotPrint("link found!")
+                    #self.mysql.query("INSERT INTO link values (null, '%s', '%s', '%s')" % (self.channel, text, name))
+                    self.data.links.append(text)
+                    self.data.save()
                     self.msg(name + ", your link has been grabbed.")
                     break
 

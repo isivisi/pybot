@@ -1,4 +1,4 @@
-from settings import *
+from data import Settings
 
 def pybotPrint(text, mode=""):
     settings = Settings()

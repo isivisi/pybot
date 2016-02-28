@@ -65,3 +65,4 @@ target/
 userlogs/*
 .idea/*
 pybot.conf
+persistent.data
