@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!python2.7
 # Pybot twitch irc bot
 # Pybot is designed to monitor and admin your twitch chat
 
