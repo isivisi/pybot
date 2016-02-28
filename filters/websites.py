@@ -14,7 +14,6 @@ msg = sys.argv[1]
 
 REGEX = re.compile('((ftp|http|https):\/\/)?([a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+.*)', re.IGNORECASE)
 KICK_MSGS 		= ["please dont post links without permission.", "please ask before posting a link."]
-print REGEX.match(msg)
 if REGEX.search(msg) is not None:
 	pybotPrint("[FILTER][WEBSITES.PY] " + name, "filter")
 	self.kick(name)

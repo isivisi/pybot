@@ -27,6 +27,9 @@ class Settings:
             # features
             self.linkgrabber = config.getboolean("features", "linkgrabber")
             self.quotes = config.getboolean("features", "quotes")
+            self.points = config.getboolean('points', 'enabled')
+            self.pointsToAppend = config.getint('points', 'points_to_append')
+            self.pointsInterval = config.getfloat('points', 'interval_in_minutes')
 
             # printing settings
             self.HTML = config.getboolean("print", "HTML")
@@ -49,6 +52,11 @@ class Settings:
             config.set('features', 'linkgrabber', 'false')
             config.set('features', 'quotes', 'false')
 
+            config.add_section('points')
+            config.set('points', 'enabled', 'false')
+            config.set('points', 'interval_in_minutes', '15.0')
+            config.set('points', 'points_to_append', '1')
+
             config.add_section('print')
             config.set('print', 'HTML', 'false')
 
@@ -67,6 +75,8 @@ class Data:
         self.linkbanned = []
         self.links = []
 
+        self.points = {"name": 0}
+
         self.read()
 
     def read(self, set = True):
@@ -79,6 +89,7 @@ class Data:
             self.quotes = json.loads(config.get("quotedata", "quotes"))
             self.linkbanned = json.loads(config.get("linkdata", "linkbanned"))
             self.links =json.loads(config.get("linkdata", "links"))
+            self.points = json.loads(config.get("userdata", "points"))
 
         return config
 
@@ -87,6 +98,7 @@ class Data:
         config.set("quotedata", "quotes", json.dumps(self.quotes))
         config.set("linkdata", "links", json.dumps(self.links))
         config.set("linkdata", "linkbanned", json.dumps(self.linkbanned))
+        config.set('userdata', 'points', json.dumps(self.points))
 
         with open('persistent.data', 'wb') as configfile:
                 config.write(configfile)
@@ -100,6 +112,9 @@ class Data:
             config.add_section('quotedata')
             config.set('quotedata', 'quotes', '[]')
 
+            config.add_section('userdata')
+            config.set('userdata', 'points', json.dumps(self.points))
+
             with open('persistent.data', 'wb') as configfile:
                 config.write(configfile)
 
@@ -107,3 +122,9 @@ class Data:
         config = ConfigParser.RawConfigParser()
         config.read("persistent.data")
         return config
+
+    def addPoints(self, user, points):
+        try:
+            self.points[user] = self.points[user] + points
+        except:
+            self.points[user] = 0
