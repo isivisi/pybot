@@ -1,6 +1,7 @@
 # Settings class to load in settings
 import ConfigParser
 import os
+import json
 
 class Settings:
         def __init__(self):
@@ -19,6 +20,9 @@ class Settings:
             self.PORT = config.getint("twitch", "PORT")
             self.channel = config.get("twitch", "channel")
 
+            # filters
+            self.filters = json.loads(config.get("filters", "activeFilters"))
+
             # printing settings
             self.HTML = config.getboolean("print", "HTML")
 
@@ -32,6 +36,9 @@ class Settings:
             config.set('twitch', 'HOST', 'irc.twitch.tv')
             config.set('twitch', 'PORT', '6667')
             config.set('twitch', 'channel', 'channelName')
+
+            config.add_section('filters')
+            config.set('filters', 'activeFilters', '["length", "profanity", "repetition", "uppercase", "websites"]')
 
             config.add_section('print')
             config.set('print', 'HTML', 'false')

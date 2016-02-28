@@ -2,14 +2,20 @@ import sys
 import random
 import re
 
+def raw_string(s):
+    if isinstance(s, str):
+        s = s.encode('string-escape')
+    elif isinstance(s, unicode):
+        s = s.encode('unicode-escape')
+    return s
+
 name = sys.argv[0]
 msg = sys.argv[1]
 
-#@diegoperini website regex
-REGEX = r"_^(?:(?:https?|ftp)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$_iuS"
+REGEX = re.compile('((ftp|http|https):\/\/)?([a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+.*)', re.IGNORECASE)
 KICK_MSGS 		= ["please dont post links without permission.", "please ask before posting a link."]
-
-if re.search(REGEX, msg):
+print REGEX.match(msg)
+if REGEX.search(msg) is not None:
 	pybotPrint("[FILTER][WEBSITES.PY] " + name, "filter")
 	self.kick(name)
 	self.msg(name + " " + KICK_MSGS[random.randint(0, len(KICK_MSGS)-1)])
