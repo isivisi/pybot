@@ -17,6 +17,6 @@ html = response.read()
 response.close()
 
 if ("true" in html):
-	printHTML("[FILTER][PROFANITY.PY] " + name, "filter")
+	pybotPrint("[FILTER][PROFANITY.PY] " + name, "filter")
 	self.msg(name + " " + KICK_MSGS[random.randint(0, len(KICK_MSGS)-1)])
 	self.kick(name)

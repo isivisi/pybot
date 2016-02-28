@@ -18,7 +18,7 @@ try:
 		db[name][1] += 1
 		
 		if (db[name][1] >= REP_AMMOUNT):
-			printHTML("[FILTER][REPETITION.PY] " + name, "filter")
+			pybotPrint("[FILTER][REPETITION.PY] " + name, "filter")
 			self.msg(name + " " + KICK_MSGS[random.randint(0, len(KICK_MSGS)-1)])
 			self.kick(name)
 			

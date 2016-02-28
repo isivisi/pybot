@@ -10,7 +10,7 @@ KICK_MSGS 		= ["please dont post links without permission.", "please ask before 
 for filter in filters:
 	if filter in msg.lower() and "permit" not in self.getMode(name):
 		
-		printHTML("[FILTER][WEBSITES.PY] " + name, "filter")
+		pybotPrint("[FILTER][WEBSITES.PY] " + name, "filter")
 		self.kick(name)
 		self.msg(name + " " + KICK_MSGS[random.randint(0, len(KICK_MSGS)-1)])
 		break

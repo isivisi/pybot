@@ -17,6 +17,6 @@ msg = sys.argv[1]
 if (len(msg) >= MIN_MSG_LEN):
 	
 	if (msg.isupper()):
-		printHTML("[FILTER][UPPERCASE.PY] " + name, "filter")
+		pybotPrint("[FILTER][UPPERCASE.PY] " + name, "filter")
 		self.msg(name + " " + KICK_MSGS[random.randint(0, len(KICK_MSGS)-1)])
 		self.kick(name) 

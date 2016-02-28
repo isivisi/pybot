@@ -1,5 +1,5 @@
+#!/usr/bin/python
 # Pybot twitch irc bot
-# Designed and written by isivisi
 # Pybot is designed to monitor and admin your twitch chat
 
 import os
