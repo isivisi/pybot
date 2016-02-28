@@ -28,21 +28,13 @@ def main():
         loadFromSettings = True
     settings = Settings()
 
-    filters = []
-    try:
-        f = sys.argv[2]
-
-        f = f.split(':');
-        for i in f:
-            if (i != ""):
-                filters.append(i)
-    except:
+    if (len(settings.filters) <= 0):
         pybotPrint("[PYBOT] Running with no filters")
 
     # create the irc connection and set the hook for the incoming feed
     con = None
 
-    con = irc(settings.HOST, settings.PORT, "#"+settings.channel, settings.NAME, settings.AUTH ,feed, filters, mysql) # secure to be 6697
+    con = irc(settings.HOST, settings.PORT, "#"+settings.channel, settings.NAME, settings.AUTH ,feed, settings.filters, mysql) # secure to be 6697
 
     thread.start_new_thread(con.connect, ())
 

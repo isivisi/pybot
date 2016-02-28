@@ -12,7 +12,15 @@ filterAPI 		= "http://www.wdyl.com/profanity?q="
 KICK_MSGS 		= [", swearing is not allowed.", "please refrain from profanity."]
 
 url_msg = urllib.quote(msg)
-response = urllib2.urlopen("%s%s" % (filterAPI, url_msg))
+
+grabbed = False
+while (grabbed == False):
+    try:
+        response = urllib2.urlopen("%s%s" % (filterAPI, url_msg))
+        grabbed = True
+    except:
+        grabbed = False
+
 html = response.read()
 response.close()
 
