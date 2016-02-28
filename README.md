@@ -5,7 +5,6 @@ Pybot is an open source twitch chat bot.
 ### Dependencies
 
 - Python 2.7
-- MySQL-python
 
 ## Installation
 
