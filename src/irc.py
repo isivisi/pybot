@@ -13,12 +13,14 @@ from commandController import *
 import json
 import random
 import urllib # py3 import urllib.request
+from data import Data
 
 PWD = os.getcwd()
 
 class chatters:
-    def __init__(self, user, con):
+    def __init__(self, user, con, data):
         self.api = "http://tmi.twitch.tv/group/user/{user}/chatters"
+        self.data = data
         self.user = user
         self.con = con
         self.check_time = 15
@@ -49,6 +51,7 @@ class chatters:
 
                 for user in self.mods:
                     self.con.addMode(user, "+o")
+
                 self.failures = 0 # reset
             except:
                 self.failures += 1
@@ -80,7 +83,7 @@ class irc:
         #self.cmdc = cmdControl(self, db, self.channel)
         self.botIsMod = False
         self.closed = False
-        self.chatters = chatters(self.user, self)
+        self.chatters = chatters(self.user, self, d)
         self.settings = Settings()
         self.data = d
         self.linkgrabber = False
@@ -100,6 +103,18 @@ class irc:
         #thread.start_new_thread(self.getMods, ())
         thread.start_new_thread(self.checkMod, ()) # waits to see if mod
         thread.start_new_thread(self.chatTimeoutCheck, ())
+        thread.start_new_thread(self.pointsCheck, ())
+
+    def pointsCheck(self):
+        if self.data.points:
+            time.sleep(60 * self.settings.pointsInterval)
+            for user in self.chatters.mods:
+                self.data.addPoints(user, self.settings.pointsToAppend)
+
+            for user in self.chatters.viewers:
+                self.data.addPoints(user, self.settings.pointsToAppend)
+            self.data.save()
+            self.pointsCheck()
 
     def chatTimeoutCheck(self):
         time.sleep(60)
