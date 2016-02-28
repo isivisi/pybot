@@ -13,7 +13,7 @@ This version of pybot is in early stages, currently you just need to:
 - pull repo
 - Run `python pybot.py -setup`
 - Modify your config
-- then just run it again with `python pybot.py -run`
+- Now you can start pybot with `pybot -run`
 
 ## Usage
 
