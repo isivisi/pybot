@@ -11,13 +11,9 @@ Pybot is an open source twitch chat bot.
 
 This version of pybot is in early stages, currently you just need to:
 - pull repo
-- Install mysql for python using one of these commands.
-  - `pip install MySQL-python`
-  - `sudo apt-get install python-mysqldb`
-  - `yum install mysql-devel`
-- Run `python PYBOT.py`, creating a config
-- Setup your config
-- then just run it again with `python PYBOT.py`
+- Run `python pybot.py -setup`
+- Modify your config
+- then just run it again with `python pybot.py -run`
 
 ## Usage
 
