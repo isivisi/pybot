@@ -5,19 +5,16 @@ import thread
 from pybotextra import * 
 import socket
 import time
-import colorama
 import re
 import sys
 import os
 import commandController
-from termcolor import colored
 from commandController import *
 import json
 import random
 import urllib # py3 import urllib.request
 
-colorama.init()
-PWD = "//var//pybot"
+PWD = os.getcwd()
 
 class chatters:
 	def __init__(self, user, con):
@@ -56,7 +53,7 @@ class chatters:
 			except:
 				self.failures += 1
 				if (self.failures >= self.failureMax):
-					printHTML("[CHATTERS] Have not received any updates in a while.", "filter")
+					pybotPrint("[CHATTERS] Have not received any updates in a while.", "filter")
 					self.failures = 0
 			
 
@@ -95,10 +92,10 @@ class irc:
 		filterList = ""
 		for f in self.filters:
 			filterList += "%s " % f.upper()
-		if (filterList != ""): printHTML("[PYBOT] %s filters loaded" % filterList)
+		if (filterList != ""): pybotPrint("[PYBOT] %s filters loaded" % filterList)
 			
 		
-		printHTML("[PYBOT] IRC object initialized, starting ping check...")
+		pybotPrint("[PYBOT] IRC object initialized, starting ping check...")
 		thread.start_new_thread(self.ping, ())
 		#thread.start_new_thread(self.getMods, ())
 		thread.start_new_thread(self.checkMod, ()) # waits to see if mod
@@ -124,8 +121,8 @@ class irc:
 		
 	def checkMod(self):
 		time.sleep(120);
-		printHTML("[PYBOT] checking mod status...")
-		printHTML("%s"%self.botIsMod)
+		pybotPrint("[PYBOT] checking mod status...")
+		pybotPrint("%s" % self.botIsMod)
 		if not (self.botIsMod):
 			self.msg("Pybot is not a mod and will not function properly.")
 		
@@ -153,17 +150,17 @@ class irc:
 
 	def kick(self, name):
 		self.msg(".timeout %s" % name)
-		printHTML("[PYBOT] Kicked user %s" % name)
+		pybotPrint("[PYBOT] Kicked user %s" % name)
 		
 	def ban(self, name):
 		self.msg(".ban %s" % name)
-		printHTML("[PYBOT] Banned user %s" % name)
+		pybotPrint("[PYBOT] Banned user %s" % name)
 				
 	def connect(self):
 		self.socket = ""
 		self.socket = socket.socket()
 		self.socket.connect((self.server, self.port))
-		printHTML("[PYBOT] Sending user info...")
+		pybotPrint("[PYBOT] Sending user info...")
 		self.socket.send("USER %s\r\n" % self.nick)
 		self.socket.send("PASS %s\r\n" % self.password)
 		self.socket.send("NICK %s\r\n" % self.nick)
@@ -171,13 +168,13 @@ class irc:
 		#self.socket.send("CAP REQ :twitch.tv/membership") #request membership but disables chat for some reason
 		
 		if self.check_login_status(self.socket.recv(1024)):
-			printHTML("[PYBOT] login success")
+			pybotPrint("[PYBOT] login success")
 			self.msg("Pybot has connected to your chat.")
 		else:
-			printHTML("[PYBOT] login failed")
+			pybotPrint("[PYBOT] login failed")
 			self.retry()
 		
-		printHTML("[PYBOT] Joining channel " + self.channel)
+		pybotPrint("[PYBOT] Joining channel " + self.channel)
 		self.joinchannel(self.channel)
 		
 		self.connected = True
@@ -203,14 +200,14 @@ class irc:
 			
 	def retry(self):
 		self.close(True)
-		printHTML("Retrying connection in 15 seconds...")
+		pybotPrint("Retrying connection in 15 seconds...")
 		time.sleep(15)
 		self.connect()
 		
 	def msg(self, text, show=True):
 		if self.connected == True:
 			self.socket.send("PRIVMSG %s :%s\r\n" % (self.channel, text))
-			if (show): printHTML(self.nick + " : " + text, "usermsg")
+			if (show): pybotPrint(self.nick + " : " + text, "usermsg")
 		
 	def privmsg(self, user, text):
 		if self.connected == True:
@@ -260,20 +257,20 @@ class irc:
 						if "QUIT" in msg:
 							ev = "user_quit"
 							name = self.getPrivMsgName(msg)
-							printHTML("%s has left the channel" % name, "irc")
+							pybotPrint("%s has left the channel" % name, "irc")
 							
 						if "JOIN" in msg:
 							if not self.nick in msg:
 								ev = "user_join"
 								name = self.getPrivMsgName(msg)
 								self.totalUsers += 1
-								printHTML("[IRC] %s has joined the channel (%s)" % (name, self.totalUsers), "irc")
+								pybotPrint("[IRC] %s has joined the channel (%s)" % (name, self.totalUsers), "irc")
 								
 						if "PART" in msg:
 							if not self.nick in msg:
 								ev = "user_part"
 								name = self.getPrivMsgName(msg)
-								printHTML("[IRC] %s has left the channel" % name, "irc")
+								pybotPrint("[IRC] %s has left the channel" % name, "irc")
 								self.totalUsers -= 1
 								
 						if "MODE" in msg:
@@ -311,7 +308,7 @@ class irc:
 								if (type not in self.getMode(name)):
 									#printHTML(name + " is a "+type, "irc")
 									self.addMode(name, "+"+type)
-									printHTML(name + "is mode " + self.getMode(name))
+									pybotPrint(name + "is mode " + self.getMode(name))
 							elif ("The moderators of this room are:" in msg):
 								text = msg.split("PRIVMSG")[1].replace('%s :' % self.channel, '').replace("The moderators of this room are:", '')
 								names = text.split(',')
@@ -321,7 +318,7 @@ class irc:
 					if self.connected == True and ev != "jtv": 
 						self.hook(self, msg, ev)
 		except Exception as e:
-			printHTML(e.message)
+			pybotPrint(e.message)
 			self.retry()
 			
 	def getLinkBanned(self):
@@ -415,7 +412,7 @@ class irc:
 			if self.connected:
 				self.ping_timeout = self.ping_timeout - 1
 				if self.ping_timeout <= 0: # timed out!
-					printHTML("Bot has timed out!, reconnecting...")
+					pybotPrint("Bot has timed out!, reconnecting...")
 					self.retry()
 			time.sleep(1)
 			

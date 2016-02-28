@@ -62,4 +62,6 @@ target/
 .ipynb_checkpoints
 
 #pybot stuff
-#userlogs/*
+userlogs/*
+.idea/*
+pybot.conf

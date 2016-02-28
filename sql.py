@@ -11,20 +11,28 @@ database = 'pybot'
 
 class sql:
 	def __init__(self):
-		self.conn = _mysql.connect(host, user, password, database)
-		printHTML("connected to database")
-		
+		self.conn = False
+		try:
+			self.conn = _mysql.connect(host, user, password, database)
+			pybotPrint("connected to database")
+		except:
+			pybotPrint("Could not connect to database")
+			self.conn = False
 	def query_r(self, q):
 		try:
 			self.conn.query(q)
 			result = self.conn.store_result()
 			return result.fetch_row(maxrows=0)
 		except:
-			printHTML("Failed sql query", "filter")
+			pybotPrint("Failed sql query", "filter")
 			return False
 		return False
 	
 	def query(self, q):
-		self.conn.query(q)
+		try:
+			self.conn.query(q)
+		except:
+			pybotPrint("Failed sql query", "filter")
+			return False
 	
 	

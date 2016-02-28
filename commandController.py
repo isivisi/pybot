@@ -42,9 +42,9 @@ class cmdControl:
 				self.commands.append(command(cmd[2], cmd[3], cmd[4], cmd[5]))
 				found = True
 				
-			if (found): printHTML("[CMDC] Custom commands loaded")
+			if (found): pybotPrint("[CMDC] Custom commands loaded")
 		except:
-			printHTML("[CMDC] No custom commands found")
+			pybotPrint("[CMDC] No custom commands found")
 		
 	def addCommand(self, trigger, args, message, permissions):
 		self.db.query("INSERT INTO command values ('%s', null, '%s', %s, '%s', '%s')" % (trigger, args, message, permissions))
