@@ -17,10 +17,17 @@ This version of pybot is in early stages, currently you just need to:
   - `yum install mysql-devel`
 - Run `python PYBOT.py`, creating a config
 - Setup your config
+- then just run it again with `python PYBOT.py`
 
 ## Usage
 
- - Currently just run `python PYBOT.py`
+ - Commands
+  - `!quotes`
+  - `!ppermit`
+  - `!plinkgrabber`     (allows links people say to be saved)
+  - `!plinkban` 
+  - `!pcommand [add]`
+  - `!pleave`
 
 ## Contributing
 
