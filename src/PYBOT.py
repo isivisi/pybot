@@ -8,6 +8,7 @@ import thread
 from data import *
 import sys
 from irc import irc # yea its dumb
+from raffle import Raffle
 
 
 # VERSION INFO
@@ -76,6 +77,23 @@ def feed(con, msg, event):
         if con.isMod(name) == False and name != "jtv":
             con.filter(name, text)
 
+        if "!points" in text:
+            try:
+                con.msg(name + ", you have " + str(con.data.points[name]) + " points.")
+            except:
+                con.msg(name + ", you have 0 points.")
+
+        if "!praffle" in text:
+            if con.settings.raffle:
+                raffle = Raffle(con, con.data)
+                texsplit = text.replace("!praffle", '').split(" ")
+
+                for pair in texsplit:
+                    try:
+                        split = pair.split(":")
+                        raffle.setParam(split[0], split[1])
+                    except:
+                        nothing = 0
 
         if "!pleave" in text:
             if con.isMod(name):

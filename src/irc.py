@@ -68,7 +68,7 @@ class irc:
         self.channel = channel
         self.user = self.channel.replace("#", '')
         self.nick = nick
-        self.hook = hook
+        self.hooks = [hook]
         self.connected = False
         self.socket = ""
         self.ping_timeout = 0
@@ -104,6 +104,12 @@ class irc:
         thread.start_new_thread(self.checkMod, ()) # waits to see if mod
         thread.start_new_thread(self.chatTimeoutCheck, ())
         thread.start_new_thread(self.pointsCheck, ())
+
+    def addHook(self, hook):
+        self.hooks.append(hook)
+
+    def removeHook(self, hook):
+        self.hooks.remove(hook)
 
     def pointsCheck(self):
         if self.data.points:
@@ -330,7 +336,8 @@ class irc:
                                     self.addMode(i.strip(), "+o")
 
                     if self.connected == True and ev != "jtv":
-                        self.hook(self, msg, ev)
+                        for hook in self.hooks:
+                            hook(self, msg, ev)
         except Exception as e:
             pybotPrint(e.message)
             self.retry()
