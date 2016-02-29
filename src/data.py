@@ -79,6 +79,7 @@ class Data:
         self.links = []
 
         self.points = {"name": 0}
+        self.commands = []
 
         self.read()
 
@@ -93,6 +94,7 @@ class Data:
             self.linkbanned = json.loads(config.get("linkdata", "linkbanned"))
             self.links =json.loads(config.get("linkdata", "links"))
             self.points = json.loads(config.get("userdata", "points"))
+            self.commands = json.loads(config.get("commands", "cmdlist"))
 
         return config
 
@@ -102,6 +104,7 @@ class Data:
         config.set("linkdata", "links", json.dumps(self.links))
         config.set("linkdata", "linkbanned", json.dumps(self.linkbanned))
         config.set('userdata', 'points', json.dumps(self.points))
+        config.set('commands', 'cmdlist', json.dumps(self.commands))
 
         with open('persistent.data', 'wb') as configfile:
                 config.write(configfile)
@@ -117,6 +120,9 @@ class Data:
 
             config.add_section('userdata')
             config.set('userdata', 'points', json.dumps(self.points))
+
+            config.add_section('commands')
+            config.set('commands', 'cmdlist', '[]')
 
             with open('persistent.data', 'wb') as configfile:
                 config.write(configfile)
