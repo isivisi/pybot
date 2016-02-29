@@ -27,6 +27,8 @@ class Settings:
             # features
             self.linkgrabber = config.getboolean("features", "linkgrabber")
             self.quotes = config.getboolean("features", "quotes")
+            self.raffle = config.getboolean("features", "raffle")
+
             self.points = config.getboolean('points', 'enabled')
             self.pointsToAppend = config.getint('points', 'points_to_append')
             self.pointsInterval = config.getfloat('points', 'interval_in_minutes')
@@ -50,7 +52,8 @@ class Settings:
 
             config.add_section('features')
             config.set('features', 'linkgrabber', 'false')
-            config.set('features', 'quotes', 'false')
+            config.set('features', 'quotes', 'true')
+            config.set('features', 'raffle', 'true')
 
             config.add_section('points')
             config.set('points', 'enabled', 'false')
