@@ -34,7 +34,7 @@ This version of pybot is in early stages, currently you just need to:
   - `!ppermit`
   - `!plinkgrabber`     (allows links people say to be saved)
   - `!plinkban` 
-  - `!pcommand [add]`
+  - `!pcommand [add|remove|update]`
   - `!pleave`
 
 ## Contributing
