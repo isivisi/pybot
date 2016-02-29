@@ -2,14 +2,13 @@
 # Pybot twitch irc bot
 # Pybot is designed to monitor and admin your twitch chat
 
-import os
-from pybotextra import *
-import thread
-from data import *
 import sys
-from irc import irc # yea its dumb
-from raffle import Raffle
+import thread
 
+from data import *
+from irc import irc # yea its dumb
+from pybotextra import *
+from src.features.raffle import Raffle
 
 # VERSION INFO
 PYBOT_VERSION = {"status": "BETA", "version": 0, "build": 121}
@@ -80,13 +79,7 @@ def feed(con, msg, event):
         if con.isMod(name) == False and name != "jtv":
             con.filter(name, text)
 
-        if checkIfCommand(text, "!points"):
-            try:
-                con.msg(name + ", you have " + str(con.data.points[name]) + " points.")
-            except:
-                con.msg(name + ", you have 0 points.")
-
-        elif checkIfCommand(text, "!praffle"):
+        if checkIfCommand(text, "!praffle"):
             if con.settings.raffle:
                 raffle = Raffle(con, con.data)
                 texsplit = text.replace("!praffle", '').split(" ")

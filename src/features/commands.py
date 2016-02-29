@@ -2,7 +2,7 @@
 
 import os
 import thread
-from pybotextra import *
+from src.pybotextra import *
 
 PWD = "/var/www/html/pybot"
 
@@ -46,7 +46,19 @@ class Commands:
     def addCommand(self, trigger, args, message, permissions):
         cmd = Command(trigger, args, message, permissions)
         self.data.commands.append(str(cmd))
+        self.data.save()
         self.commands.append(cmd)
+
+    def removeCommand(self, cmd):
+        self.commands.remove(cmd)
+        self.data.commands.remove(str(cmd))
+        self.data.save()
+
+    def commandExists(self, trigger):
+        for cmd in self.commands:
+            if cmd.trigger == trigger:
+                return cmd
+        return False
 
     def hook(self, con, msg, event):
         if event == "user_privmsg":
@@ -57,3 +69,24 @@ class Commands:
                 if checkIfCommand(text, command.trigger):
                     self.con.msg(command.message)
                     break
+
+            if checkIfCommand(text, "!command", "add"):
+                #split = re.split(ur'[^\s"\']+|"([^"]*)"|\'([^\']*)\'', text)
+                if (self.con.isMod(name)):
+                    split = splitButNotQuotes(text)
+                    if len(split) >= 5:
+                        self.addCommand(split[2], split[3], split[4].replace('"', ''), "")
+                        self.con.msg("Command " + split[2] + " added")
+                    else:
+                        self.con.msg("Invalid syntax")
+
+            if checkIfCommand(text, "!command", "remove"):
+                if (self.con.isMod(name)):
+                    split = text.strip().split()
+                    if len(split) >= 3:
+                        cmd = self.commandExists(split[2])
+                        if cmd is not False:
+                            self.removeCommand(cmd)
+                            self.con.msg("Command " + split[2] + " removed")
+                        else:
+                            self.con.msg("Command not found")
