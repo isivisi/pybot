@@ -178,31 +178,35 @@ class irc:
         pybotPrint("[PYBOT] Banned user %s" % name)
 
     def connect(self):
-        self.socket = ""
-        self.socket = socket.socket()
-        self.socket.connect((self.server, self.port))
-        pybotPrint("[PYBOT] Sending user info...")
-        self.socket.send("USER %s\r\n" % self.nick)
-        self.socket.send("PASS %s\r\n" % self.password)
-        self.socket.send("NICK %s\r\n" % self.nick)
-        self.socket.send("TWITCHCLIENT 3\r\n")
-        #self.socket.send("CAP REQ :twitch.tv/membership") #request membership but disables chat for some reason
+        try:
+            self.socket = ""
+            self.socket = socket.socket()
+            self.socket.connect((self.server, self.port))
+            pybotPrint("[PYBOT] Sending user info...")
+            self.socket.send("USER %s\r\n" % self.nick)
+            self.socket.send("PASS %s\r\n" % self.password)
+            self.socket.send("NICK %s\r\n" % self.nick)
+            self.socket.send("TWITCHCLIENT 3\r\n")
+            #self.socket.send("CAP REQ :twitch.tv/membership") #request membership but disables chat for some reason
 
-        if self.check_login_status(self.socket.recv(1024)):
-            pybotPrint("[PYBOT] login success")
-            self.msg("Pybot has connected to your chat.")
-        else:
-            pybotPrint("[PYBOT] login failed")
+            if self.check_login_status(self.socket.recv(1024)):
+                pybotPrint("[PYBOT] login success")
+                self.msg("Pybot has connected to your chat.")
+            else:
+                pybotPrint("[PYBOT] login failed")
+                self.retry()
+
+            pybotPrint("[PYBOT] Joining channel " + self.channel)
+            self.joinchannel(self.channel)
+
+            self.connected = True
+            self.ping_timeout = self.ping_timeout_max
+            self.closed = False
+
+            self.getLoop()
+        except:
+            pybotPrint("[IRC] connection failed, retrying...")
             self.retry()
-
-        pybotPrint("[PYBOT] Joining channel " + self.channel)
-        self.joinchannel(self.channel)
-
-        self.connected = True
-        self.ping_timeout = self.ping_timeout_max
-        self.closed = False
-
-        self.getLoop()
 
     def getMods(self):
         while 1:

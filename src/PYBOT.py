@@ -37,7 +37,10 @@ def main():
     thread.start_new_thread(con.connect, ())
 
     while con.isClosed() == False:
-        nothing = 0
+        if (con.connected):
+            input = raw_input("")
+            if (input):
+                con.msg(input)
 
 
     pybotPrint("[PYBOT] connection ended")
