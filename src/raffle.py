@@ -4,6 +4,7 @@
 import thread
 import time
 import random
+from pybotextra import *
 
 class Raffle:
     def __init__(self, conn, data, timelimit=120):
@@ -34,7 +35,7 @@ class Raffle:
             name = msg.replace(':', '').split('!')[0].replace('\n\r', '')
             text = msg.split("PRIVMSG")[1].replace('%s :' % con.channel, '')
 
-            if "!joinraffle" in text:
+            if checkIfCommand(text, "!joinraffle"):
                 # do they meet the minimum user requirments?
                 try:
                     userPoints = self.data.points[name]

@@ -9,7 +9,7 @@ import re
 import sys
 import os
 import commandController
-from commandController import *
+from commands import Commands
 import json
 import random
 import urllib # py3 import urllib.request
@@ -86,6 +86,7 @@ class irc:
         self.chatters = chatters(self.user, self, d)
         self.settings = Settings()
         self.data = d
+        self.commands = Commands(self)
         self.linkgrabber = False
 
         self.filters = []
@@ -98,7 +99,7 @@ class irc:
         if (filterList != ""): pybotPrint("[PYBOT] %s filters loaded" % filterList)
 
 
-        pybotPrint("[PYBOT] IRC object initialized, starting ping check...")
+        pybotPrint("[PYBOT] IRC object initialized with %s hooks, starting ping check..." % len(self.hooks))
         thread.start_new_thread(self.ping, ())
         #thread.start_new_thread(self.getMods, ())
         thread.start_new_thread(self.checkMod, ()) # waits to see if mod

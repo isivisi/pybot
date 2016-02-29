@@ -77,13 +77,13 @@ def feed(con, msg, event):
         if con.isMod(name) == False and name != "jtv":
             con.filter(name, text)
 
-        if "!points" in text:
+        if checkIfCommand(text, "!points"):
             try:
                 con.msg(name + ", you have " + str(con.data.points[name]) + " points.")
             except:
                 con.msg(name + ", you have 0 points.")
 
-        if "!praffle" in text:
+        elif checkIfCommand(text, "!praffle"):
             if con.settings.raffle:
                 raffle = Raffle(con, con.data)
                 texsplit = text.replace("!praffle", '').split(" ")
@@ -95,14 +95,14 @@ def feed(con, msg, event):
                     except:
                         nothing = 0
 
-        if "!pleave" in text:
+        elif checkIfCommand(text, "!pleave"):
             if con.isMod(name):
                 con.msg("Bye!");
                 con.close()
             else:
                 con.msg('%s, you do not have access to this command.' % name)
 
-        elif "!ppermit" in text:
+        elif checkIfCommand(text, "!ppermit"):
             cmd_args = text.split(" ")
             if con.isMod(name):
                 con.msg("%s can post a link" % cmd_args[2])
@@ -110,7 +110,7 @@ def feed(con, msg, event):
             else:
                 con.msg('%s, you do not have access to this command.' % name)
 
-        elif "!pcommand add" in text:
+        elif checkIfCommand(text, "!pcommand add"):
             if con.isMod(name):
                 trigger = msg.split(' ')[2]
                 text = msg.split(' ')[3]
@@ -119,7 +119,7 @@ def feed(con, msg, event):
                 cmd.addCommand(trigger, text, permissions)
             else:
                 con.msg('%s, you do not have access to this command.' % name)
-        elif "!plinkgrabber" in text:
+        elif checkIfCommand(text, "!plinkgrabber"):
             if con.isMod(name):
                 if (con.linkgrabber):
                     con.linkgrabber = False
@@ -131,7 +131,7 @@ def feed(con, msg, event):
             else:
                 con.msg('%s, you do not have access to this command.' % name)
 
-        elif "!quote" in text:
+        elif checkIfCommand(text, "!quote"):
             if con.settings.quotes:
                 quote = text.replace("!quote", "")
                 if (quote.strip() != ""):
@@ -141,7 +141,7 @@ def feed(con, msg, event):
                     if (con.getRandomQuote()):
                         con.msg(con.getRandomQuote())
 
-        elif "!plinkban" in text:
+        elif checkIfCommand(text, "!plinkban"):
             cmd_args = text.split(" ")
             if con.isMod(name):
                 #try:
