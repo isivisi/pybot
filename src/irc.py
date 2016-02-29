@@ -1,22 +1,22 @@
 # irc class to connect to irc servers
 # written by isivisi
 
-import thread
-from pybotextra import * 
-import socket
-import time
-import re
-import sys
-import os
-import commandController
-from commands import Commands
 import json
+import os
 import random
+import socket
+import sys
+import thread
+import time
 import urllib # py3 import urllib.request
-from data import Data
+
+from pybotextra import *
+from src.features.commands import Commands
+from src.features.points import Points
 
 PWD = os.getcwd()
 
+# class to encapsulate the logic for connecting and reading twitch user data
 class chatters:
     def __init__(self, user, con, data):
         self.api = "http://tmi.twitch.tv/group/user/{user}/chatters"
@@ -32,12 +32,14 @@ class chatters:
 
         thread.start_new_thread(self.loopChatter, ())
 
+    # Grab json info from api and return parsed json
     def getChatterInfo(self):
         url = self.api.replace("{user}", self.user)
         response = urllib.urlopen(url)
         data = json.loads(response.read())
         return data
 
+    # Update loop to constantly check for changes
     def loopChatter(self):
         while 1:
             try:
@@ -87,6 +89,7 @@ class irc:
         self.settings = Settings()
         self.data = d
         self.commands = Commands(self)
+        self.points = Points(self, self.chatters, self.settings, self.data)
         self.linkgrabber = False
 
         self.filters = []
@@ -104,24 +107,12 @@ class irc:
         #thread.start_new_thread(self.getMods, ())
         thread.start_new_thread(self.checkMod, ()) # waits to see if mod
         thread.start_new_thread(self.chatTimeoutCheck, ())
-        thread.start_new_thread(self.pointsCheck, ())
 
     def addHook(self, hook):
         self.hooks.append(hook)
 
     def removeHook(self, hook):
         self.hooks.remove(hook)
-
-    def pointsCheck(self):
-        if self.data.points:
-            time.sleep(60 * self.settings.pointsInterval)
-            for user in self.chatters.mods:
-                self.data.addPoints(user, self.settings.pointsToAppend)
-
-            for user in self.chatters.viewers:
-                self.data.addPoints(user, self.settings.pointsToAppend)
-            self.data.save()
-            self.pointsCheck()
 
     def chatTimeoutCheck(self):
         time.sleep(60)
