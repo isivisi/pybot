@@ -21,10 +21,11 @@ Pybot is an open source twitch chat bot.
 This version of pybot is in early stages, currently you just need to:
 - pull repo
 - Run `python pybot.py -setup`
-- Configure your bot
+- Configure your bot:
  - `pybot --config bot.name botusername`
  - `pybot --config bot.auth oauth:botauthentication`
  - `pybot --config twitch.channel channeltomoderate`
+- You can view the full configure proccess [here](https://github.com/isivisi/pybot/wiki/Config)
 - Now you can start pybot with `pybot -run`
 
 ## Usage
