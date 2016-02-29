@@ -2,7 +2,7 @@
 
 import os
 import thread
-from src.pybotextra import *
+from pybotextra import *
 
 PWD = "/var/www/html/pybot"
 

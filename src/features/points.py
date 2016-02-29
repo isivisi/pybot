@@ -1,7 +1,7 @@
 
 import thread
 import time
-from src.pybotextra import *
+from pybotextra import *
 
 class Points:
     def __init__(self, con, chatters, settings, data):

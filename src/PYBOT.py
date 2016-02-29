@@ -8,7 +8,7 @@ import thread
 from data import *
 from irc import irc # yea its dumb
 from pybotextra import *
-from src.features.raffle import Raffle
+from features.raffle import Raffle
 
 # VERSION INFO
 PYBOT_VERSION = {"status": "BETA", "version": 0, "build": 121}

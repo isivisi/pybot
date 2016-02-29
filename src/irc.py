@@ -11,8 +11,8 @@ import time
 import urllib # py3 import urllib.request
 
 from pybotextra import *
-from src.features.commands import Commands
-from src.features.points import Points
+from features.commands import Commands
+from features.points import Points
 
 PWD = os.getcwd()
 
