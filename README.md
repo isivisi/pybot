@@ -43,6 +43,7 @@ This version of pybot is in early stages, currently you just need to:
 
 1. Fork it
 2. Check the issues tab and start working on a bug / enhancement
+3. Check the [wiki](https://github.com/isivisi/pybot/wiki) understand how pybot works if you're confused
 5. Submit a pull request :D
 
 ## History
