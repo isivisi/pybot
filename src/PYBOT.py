@@ -11,6 +11,7 @@ from pybotextra import *
 from features.raffle import Raffle
 from features.commands import Commands
 from features.points import Points
+from web import pybot_web
 
 # VERSION INFO
 PYBOT_VERSION = {"status": "BETA", "version": 0, "build": 121}
@@ -25,7 +26,7 @@ def main():
     data = Data()
 
     if (len(settings.filters) <= 0):
-        pybotPrint("[PYBOT] Running with no filters")
+        pybotPrint("[pybot.main] Running with no filters")
 
     # create the irc connection and set the hook for the incoming feed
     con = irc(settings, feed, data)
@@ -36,6 +37,9 @@ def main():
 
     # start connection in new thread
     thread.start_new_thread(con.connect, ())
+
+    # start web services
+    web = pybot_web.pybot_web(con, settings, data)
 
     while con.isClosed() == False:
         if (con.connected):

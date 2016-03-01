@@ -8,21 +8,14 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         title = "Pybot web ui testing"
         info = "This is where information will go"
-        self.render("templates/index.html", title=title, info=info)
+
+        title2 = "status"
+        info2 = ""
+        self.render("templates/index.html", title=title, info=info, title2=title2, info2=info2)
 
 class SettingsHandler(tornado.web.RequestHandler):
     def get(self):
         self.write("Settings test")
-
-# example
-class exampleGetPost(tornado.web.RequestHandler):
-    def get(self):
-        self.write("whatever website bs")
-
-    def post(self):
-        self.set_header("Content-Type", "text/plain")
-        self.write(self.get_body_argument("nameofinputfromform"))
-
 
 def make_app():
 
@@ -42,10 +35,12 @@ class pybot_web():
         self.settings = settings
         self.data = data
 
+        print("[pybot.tornado.web] Web services starting")
+
         app = make_app()
         app.listen(8888)
         tornado.ioloop.IOLoop.current().start()
 
 # for testing directly
-if __name__ == "__main__":
-    pybot_web("","","")
+#if __name__ == "__main__":
+#    pybot_web("","","")

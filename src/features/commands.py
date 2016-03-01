@@ -41,7 +41,7 @@ class Commands:
         for command in commands:
             split = command.split(',')
             self.commands.append(Command(split[0], split[1], split[2], split[3]))
-        pybotPrint("[CMDS] " + str(len(commands)) + " custom commands loaded.")
+        pybotPrint("[pybot.commands] " + str(len(commands)) + " custom commands loaded.")
 
     def addCommand(self, trigger, args, message, permissions):
         cmd = Command(trigger, args, message, permissions)

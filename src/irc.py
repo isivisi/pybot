@@ -56,7 +56,7 @@ class chatters:
             except:
                 self.failures += 1
                 if (self.failures >= self.failureMax):
-                    pybotPrint("[CHATTERS] Have not received any updates in a while.", "filter")
+                    pybotPrint("[pybot.chatters] Have not received any updates in a while.", "filter")
                     self.failures = 0
 
 
@@ -95,10 +95,10 @@ class irc:
         filterList = ""
         for f in self.filters:
             filterList += "%s " % f.upper()
-        if (filterList != ""): pybotPrint("[PYBOT] %s filters loaded" % filterList)
+        if (filterList != ""): pybotPrint("[pybot.irc] %s filters loaded" % filterList)
 
 
-        pybotPrint("[PYBOT] IRC object initialized, starting ping check...")
+        pybotPrint("[pybot.irc] IRC object initialized, starting ping check...")
         thread.start_new_thread(self.ping, ())
         #thread.start_new_thread(self.getMods, ())
         thread.start_new_thread(self.checkMod, ()) # waits to see if mod
@@ -129,7 +129,7 @@ class irc:
 
     def checkMod(self):
         time.sleep(120);
-        pybotPrint("[PYBOT] checking mod status...")
+        pybotPrint("[pybot.irc] checking mod status...")
         pybotPrint("%s" % self.botIsMod)
         if not (self.botIsMod):
             self.msg("Pybot is not a mod and will not function properly.")
@@ -158,18 +158,18 @@ class irc:
 
     def kick(self, name):
         self.msg(".timeout %s" % name)
-        pybotPrint("[PYBOT] Kicked user %s" % name)
+        pybotPrint("[pybot.irc] Kicked user %s" % name)
 
     def ban(self, name):
         self.msg(".ban %s" % name)
-        pybotPrint("[PYBOT] Banned user %s" % name)
+        pybotPrint("[pybot.irc] Banned user %s" % name)
 
     def connect(self):
         try:
             self.socket = ""
             self.socket = socket.socket()
             self.socket.connect((self.server, self.port))
-            pybotPrint("[PYBOT] Sending user info...")
+            pybotPrint("[pybot.irc] Sending user info...")
             self.socket.send("USER %s\r\n" % self.nick)
             self.socket.send("PASS %s\r\n" % self.password)
             self.socket.send("NICK %s\r\n" % self.nick)
@@ -177,13 +177,13 @@ class irc:
             #self.socket.send("CAP REQ :twitch.tv/membership") #request membership but disables chat for some reason
 
             if self.check_login_status(self.socket.recv(1024)):
-                pybotPrint("[PYBOT] login success")
+                pybotPrint("[pybot.irc] login success")
                 self.msg("Pybot has connected to your chat.")
             else:
-                pybotPrint("[PYBOT] login failed")
+                pybotPrint("[pybot.irc] login failed")
                 self.retry()
 
-            pybotPrint("[PYBOT] Joining channel " + self.channel)
+            pybotPrint("[pybot.irc] Joining channel " + self.channel)
             self.joinchannel(self.channel)
 
             self.connected = True
@@ -192,7 +192,7 @@ class irc:
 
             self.getLoop()
         except:
-            pybotPrint("[IRC] connection failed, retrying...")
+            pybotPrint("[pybot.irc] connection failed, retrying...")
             self.retry()
 
     def getMods(self):
