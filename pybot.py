@@ -6,9 +6,12 @@ import os
 import sys
 import subprocess
 from src import data
+import pip
 
 mainLoc = os.getcwd()+"//src//PYBOT.py"
 pyLoc = sys.executable
+
+dependencies = {"tornado":"tornado>=4.3"}
 
 def main():
 
@@ -20,9 +23,20 @@ def main():
 
         elif sys.argv[1] == "-setup":
             print("Pybot is setting up...")
+
+            print("[Setup] Installing dependencies...")
+            for package in dependencies.keys():
+                try:
+                    __import__(package)
+                    print("[Setup] " + package + " already installed")
+                except:
+                    pip.main(['install', dependencies[package]])
+                    print("[Setup] " + package + " installed")
+
             # this create default config
             data.Settings()
             print("[Setup] Config created")
+
             data.Data()
             print("[Setup] Persistant data file created")
 
