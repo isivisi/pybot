@@ -9,6 +9,8 @@ from data import *
 from irc import irc # yea its dumb
 from pybotextra import *
 from features.raffle import Raffle
+from features.commands import Commands
+from features.points import Points
 
 # VERSION INFO
 PYBOT_VERSION = {"status": "BETA", "version": 0, "build": 121}
@@ -18,10 +20,7 @@ PWD = os.getcwd()
 def main():
     pybotPrint("PYBOT %s VERSION %s BUILD %s" % (PYBOT_VERSION["status"], PYBOT_VERSION["version"], PYBOT_VERSION["build"]), "usermsg")
 
-    try:
-        channel = sys.argv[1]
-    except:
-        loadFromSettings = True
+    # global data
     settings = Settings()
     data = Data()
 
@@ -29,10 +28,13 @@ def main():
         pybotPrint("[PYBOT] Running with no filters")
 
     # create the irc connection and set the hook for the incoming feed
-    con = None
+    con = irc(settings, feed, data)
 
-    con = irc(settings.HOST, settings.PORT, "#"+settings.channel, settings.NAME, settings.AUTH ,feed, settings.filters, data) # secure to be 6697
+    # connect separate features to the connection
+    cmds = Commands(con)
+    points = Points(con, con.chatters, settings, data)
 
+    # start connection in new thread
     thread.start_new_thread(con.connect, ())
 
     while con.isClosed() == False:

@@ -11,8 +11,6 @@ import time
 import urllib # py3 import urllib.request
 
 from pybotextra import *
-from features.commands import Commands
-from features.points import Points
 
 PWD = os.getcwd()
 
@@ -64,12 +62,12 @@ class chatters:
 
 # irc object
 class irc:
-    def __init__(self, server, port, channel, nick, password, hook, filters, d):
-        self.server = server
-        self.port = port
-        self.channel = channel
-        self.user = self.channel.replace("#", '')
-        self.nick = nick
+    def __init__(self, settings, hook, data):
+        self.server = settings.HOST
+        self.port = settings.PORT
+        self.channel = "#"+settings.channel
+        self.user = settings.channel
+        self.nick = settings.NAME
         self.hooks = [hook]
         self.connected = False
         self.socket = ""
@@ -78,22 +76,20 @@ class irc:
         self.chat_timeout_max = 60 										# minutes
         self.chat_check_mods = 30										# seconds
         self.chat_time = 0												# auto incremented dont change
-        self.password = password
+        self.password = settings.AUTH
         self.totalUsers = 0
         self.users = {}
         self.filterDb = {}  											# if filters need persistent data. list of all created dictionaries
+        self.data = data
         #self.cmdc = cmdControl(self, db, self.channel)
         self.botIsMod = False
         self.closed = False
-        self.chatters = chatters(self.user, self, d)
-        self.settings = Settings()
-        self.data = d
-        self.commands = Commands(self)
-        self.points = Points(self, self.chatters, self.settings, self.data)
+        self.chatters = chatters(self.user, self, self.data)
+        self.settings = settings
         self.linkgrabber = False
 
         self.filters = []
-        for i in filters:
+        for i in settings.filters:
             self.filters.append(i+".py")
 
         filterList = ""
@@ -102,7 +98,7 @@ class irc:
         if (filterList != ""): pybotPrint("[PYBOT] %s filters loaded" % filterList)
 
 
-        pybotPrint("[PYBOT] IRC object initialized with %s hooks, starting ping check..." % len(self.hooks))
+        pybotPrint("[PYBOT] IRC object initialized, starting ping check...")
         thread.start_new_thread(self.ping, ())
         #thread.start_new_thread(self.getMods, ())
         thread.start_new_thread(self.checkMod, ()) # waits to see if mod
