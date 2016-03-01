@@ -33,6 +33,9 @@ class Settings:
             self.pointsToAppend = config.getint('points', 'points_to_append')
             self.pointsInterval = config.getfloat('points', 'interval_in_minutes')
 
+            self.web = config.getboolean("web", "enabled")
+            self.webport = config.getint("web", "port")
+
             # printing settings
             self.HTML = config.getboolean("print", "HTML")
 
@@ -59,6 +62,10 @@ class Settings:
             config.set('points', 'enabled', 'false')
             config.set('points', 'interval_in_minutes', '15.0')
             config.set('points', 'points_to_append', '1')
+
+            config.add_section('web')
+            config.set('web', 'enable', 'true')
+            config.set('web', 'port', '8888')
 
             config.add_section('print')
             config.set('print', 'HTML', 'false')

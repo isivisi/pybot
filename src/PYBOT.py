@@ -39,7 +39,8 @@ def main():
     thread.start_new_thread(con.connect, ())
 
     # start web services
-    web = pybot_web.pybot_web(con, settings, data)
+    if (settings.web):
+        web = pybot_web.pybot_web(con, settings, data)
 
     while con.isClosed() == False:
         if (con.connected):

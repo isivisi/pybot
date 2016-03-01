@@ -35,7 +35,7 @@ class pybot_web():
         self.settings = settings
         self.data = data
 
-        print("[pybot.tornado.web] Web services starting")
+        print("[pybot.tornado.web] Web services starting on port " + str(settings.webport))
 
         app = make_app()
         app.listen(8888)
