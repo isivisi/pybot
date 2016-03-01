@@ -16,6 +16,10 @@ class HubHandler(tornado.web.RequestHandler):
         settings = Settings()
         self.render("templates/hub.html", data=data, settings=settings, page=page)
 
+    def post(self, page):
+        if page == "settings":
+            print self.get_argument("botname", "")
+
 class SettingsHandler(tornado.web.RequestHandler):
     def get(self):
         self.write("Settings test")

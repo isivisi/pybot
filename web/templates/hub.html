@@ -5,7 +5,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Pybot login</title>
+  <title>Pybot Hub</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -85,36 +85,52 @@
 				<h3> Settings </h3>
 				<hr/>
 				
-				<h4> Bot </h4>
 				<form method="post">
+					<h4> Bot </h4>
 					<div class="row">
 						<div class="six columns">
 							<label for="botname">Bot name</label>
-							<input class="u-full-width" id="botname" type="text" value="{{ escape(settings.NAME) }}" />
+							<input class="u-full-width" id="botname" name="botname" type="text" value="{{ escape(settings.NAME) }}" />
 						</div>
 						<div class="six columns">
 							<label for="botauth">Bot Auth</label>
-							<input class="u-full-width" id="botauth" type="password" value="{{ escape(settings.AUTH) }}" />
+							<input class="u-full-width" id="botauth" name="botauth" type="password" value="{{ escape(settings.AUTH) }}" />
 						</div>
 					</div>
-				</form>
-				
-				<h4> Twitch </h4>
-				<form method="post">
+					</br>
+					<h4> Twitch </h4>
 					<table class="u-full-width">
 						<tr>
 							<td>host</td>
-							<td><input class="u-full-width" type="text" value="{{ escape(settings.HOST) }}" /></td>
+							<td><input class="u-full-width" type="text" name="twitchhost" value="{{ escape(settings.HOST) }}" /></td>
 						</tr>
 						<tr>
 							<td>port</td>
-							<td><input class="u-full-width" type="text" value="{{ escape(str(settings.PORT)) }}" /></td>
+							<td><input class="u-full-width" type="text" name="twitchport" value="{{ escape(str(settings.PORT)) }}" /></td>
 						</tr>
 						<tr>
 							<td>channel</td>
-							<td><input class="u-full-width" type="text" value="{{ escape(settings.channel) }}" /></td>
+							<td><input class="u-full-width" type="text" name="channel" value="{{ escape(settings.channel) }}" /></td>
 						</tr>
 					</table>
+					</br>
+					<h4> Web </h4>
+					<div class="row">
+						<div class="six columns">
+							<label for="webport">Web Port</label>
+							<input id="webport" name="webport" type="text" value="{{ escape(str(settings.webport)) }}" />
+						</div>
+						<div class="six columns">
+							<label for="web">Enabled</label>
+							{% if settings.web %}
+								<input id="web" name="web" type="checkbox" value="True" checked=checked/>
+							{% else %}
+								<input id="web" name="web" type="checkbox" value="True" />
+							{% end %}
+						</div>
+					</div>
+					
+					<input type="submit" class="button button-primary" value="Save Changes" />
 				</form>
 			{% end %}
 					
