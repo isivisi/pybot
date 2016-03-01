@@ -39,45 +39,85 @@
 		<section class="header">
 			<h3 class="title">Pybot Hub</h3>
 		</section>
-		<section class="nav">
-			<div class="row">
-				<div class="three columns">
-					Commands
-				</div>
-				<div class="three columns">
-					Filters
-				</div>
-				<div class="three columns">
-					Users
-				</div>
-				<div class="three columns">
-					Features
-				</div>
-				<div class="three columns">
-					Settings
-				</div>
-			</div>
-		</section>
 		
-		<section>
-			<table class="u-full-width">
-				<thread>
-					<tr>
-						<th>Name</th>
-						<th>Points</th>
-					</tr>
-				</thread>
-				<tbody>
-					{% for name in data.points.keys() %}
+		<div class="nav">
+					<div class="row">
+						{% if page == "users" %}
+							<a class="button button-primary"><div class="three column">Users</div></a>
+						{% else %}
+							<a href="/hub/users" class="button"><div class="three column">Users</div></a>
+						{% end %}
+						{% if page == "filters" %}
+							<a class="button button-primary"><div class="three column">Filters</div></a>
+						{% else %}
+							<a href="/hub/filters" class="button"><div class="three column">Filters</div></a>
+						{% end %}
+						{% if page == "settings" %}
+							<a class="button button-primary"><div class="three column">Settings</div></a>
+						{% else %}
+							<a href="/hub/settings" class="button"><div class="three column">Settings</div></a>
+						{% end %}
+					</div>
+		</div>
+		
+			
+			{% if page == "users" %}
+				<h3> Users </h3>
+				<table class="u-full-width">
+					<thread>
 						<tr>
-							<td> {{ escape(name) }} </td>
-							<td> {{ escape(str(data.points[name])) }} </td>
+							<th>Name</th>
+							<th>Points</th>
 						</tr>
-					{% end %}
-				</tbody>
-			</table>
-		</section>
-		
+					</thread>
+					<tbody>
+						{% for name in data.points.keys() %}
+							<tr>
+								<td> {{ escape(name) }} </td>
+								<td> {{ escape(str(data.points[name])) }} </td>
+							</tr>
+						{% end %}
+					</tbody>
+				</table>
+			{% end %}
+			
+			{% if page == "settings" %}
+				<h3> Settings </h3>
+				<hr/>
+				
+				<h4> Bot </h4>
+				<form method="post">
+					<div class="row">
+						<div class="six columns">
+							<label for="botname">Bot name</label>
+							<input class="u-full-width" id="botname" type="text" value="{{ escape(settings.NAME) }}" />
+						</div>
+						<div class="six columns">
+							<label for="botauth">Bot Auth</label>
+							<input class="u-full-width" id="botauth" type="password" value="{{ escape(settings.AUTH) }}" />
+						</div>
+					</div>
+				</form>
+				
+				<h4> Twitch </h4>
+				<form method="post">
+					<table class="u-full-width">
+						<tr>
+							<td>host</td>
+							<td><input class="u-full-width" type="text" value="{{ escape(settings.HOST) }}" /></td>
+						</tr>
+						<tr>
+							<td>port</td>
+							<td><input class="u-full-width" type="text" value="{{ escape(str(settings.PORT)) }}" /></td>
+						</tr>
+						<tr>
+							<td>channel</td>
+							<td><input class="u-full-width" type="text" value="{{ escape(settings.channel) }}" /></td>
+						</tr>
+					</table>
+				</form>
+			{% end %}
+					
 	</div>
   
 
