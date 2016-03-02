@@ -1,6 +1,6 @@
 # for persistent data
 
-import ConfigParser
+import configparser
 import os
 import json
 from Singleton import *
@@ -43,7 +43,7 @@ class Settings(Singleton):
             self.HTML = config.getboolean("print", "HTML")
 
         def createConf(self):
-            config = ConfigParser.RawConfigParser()
+            config = configparser.RawConfigParser()
             config.add_section('bot')
             config.set('bot', 'NAME', 'usernameforbot')
             config.set('bot', 'AUTH', 'autho:forbot')
@@ -77,7 +77,7 @@ class Settings(Singleton):
                 config.write(configfile)
 
         def getConf(self):
-            config = ConfigParser.RawConfigParser()
+            config = configparser.RawConfigParser()
             config.read("pybot.conf")
             return config
 
@@ -125,7 +125,7 @@ class Data(Singleton):
                 config.write(configfile)
 
     def createConf(self):
-            config = ConfigParser.RawConfigParser()
+            config = configparser.RawConfigParser()
             config.add_section('linkdata')
             config.set('linkdata', 'links', '[]')
             config.set('linkdata', 'linkbanned', '[]')
@@ -143,7 +143,7 @@ class Data(Singleton):
                 config.write(configfile)
 
     def getConf(self):
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read("persistent.data")
         return config
 

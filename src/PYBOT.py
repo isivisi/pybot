@@ -1,9 +1,9 @@
-#!python2.7
+
 # Pybot twitch irc bot
 # Pybot is designed to monitor and admin your twitch chat
 
 import sys
-import thread
+import threading
 
 from data import *
 from irc import irc # yea its dumb
@@ -36,7 +36,8 @@ def main():
     points = Points(con, con.chatters, settings, data)
 
     # start connection in new thread
-    thread.start_new_thread(con.connect, ())
+    #thread.start_new_thread(con.connect, ())
+    threading.Thread(target=con.connect).start()
 
     # start web services
     if (settings.web):

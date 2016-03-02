@@ -1,5 +1,5 @@
 
-import thread
+import threading
 import time
 from pybotextra import *
 
@@ -11,7 +11,8 @@ class Points:
         self.data = data
 
         con.addHook(self.hook)
-        thread.start_new_thread(self.pointsCheck, ())
+        threading.Thread(target=self.pintsCheck).start()
+        #thread.start_new_thread(self.pointsCheck, ())
 
     def pointsCheck(self):
         if self.data.points:

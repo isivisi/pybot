@@ -6,7 +6,7 @@ import os
 import random
 import socket
 import sys
-import thread
+import threading
 import time
 import urllib # py3 import urllib.request
 
@@ -28,7 +28,8 @@ class chatters:
         self.failures = 0						# count all the failed attempts at getting info
         self.failureMax = 10
 
-        thread.start_new_thread(self.loopChatter, ())
+        threading.Thread(target=self.loopChatter).start()
+        #thread.start_new_thread(self.loopChatter, ())
 
     # Grab json info from api and return parsed json
     def getChatterInfo(self):
@@ -99,10 +100,12 @@ class irc:
 
 
         pybotPrint("[pybot.irc] IRC object initialized, starting ping check...")
-        thread.start_new_thread(self.ping, ())
-        #thread.start_new_thread(self.getMods, ())
-        thread.start_new_thread(self.checkMod, ()) # waits to see if mod
-        thread.start_new_thread(self.chatTimeoutCheck, ())
+        threading.Thread(target=self.ping).start()
+        #thread.start_new_thread(self.ping, ())
+        threading.Thread(target=self.checkMod).start()
+        #thread.start_new_thread(self.checkMod, ()) # waits to see if mod
+        threading.Thread(target=self.chatTimeoutCheck).start()
+        #thread.start_new_thread(self.chatTimeoutCheck, ())
 
     def addHook(self, hook):
         self.hooks.append(hook)
@@ -121,7 +124,8 @@ class irc:
 
     def filter(self, user, data):
         for i in self.filters:
-            thread.start_new_thread(self._filterUser, (user, data, i))
+            threading.Thread(target=self._filterUser, args=(user, data, i)).start()
+            #thread.start_new_thread(self._filterUser, (user, data, i))
 
     def _filterUser(self, user, data, filter):
         sys.argv = [user, data]
