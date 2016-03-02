@@ -12,14 +12,25 @@ class MainHandler(tornado.web.RequestHandler):
 
 class HubHandler(tornado.web.RequestHandler):
     def get(self, page):
-        data = Data()
-        settings = Settings()
+        data = Data.instance()
+        settings = Settings.instance()
         self.render("templates/hub.html", data=data, settings=settings, page=page)
 
     def post(self, page):
+        data = Data.instance()
+        settings = Settings.instance()
         if page == "settings":
-            settings = Settings.instance()
-            print self.get_argument("botname", "")
+            #TODO: modify settings to make this easier
+
+            config = settings.getConf()
+
+            for arg in self.request.arguments.keys():
+                split = arg.split(".")
+                config.set(split[0], split[1], self.request.arguments[arg][0])
+                #print "[pybot.tornado.web] " + arg + " set to " + str(self.request.arguments[arg][0])
+            settings.saveConf(config)
+
+            self.render("templates/hub.html", data=data, settings=settings, page=page)
 
 class SettingsHandler(tornado.web.RequestHandler):
     def get(self):

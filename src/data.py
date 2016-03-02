@@ -12,7 +12,9 @@ class Settings(Singleton):
             else:
                 self.createConf()
                 config = self.getConf()
+            self.setVars(config)
 
+        def setVars(self, config):
             # name and auth for the user that the bot will speak from
             self.NAME = config.get("bot", "NAME")
             self.AUTH = config.get("bot", "AUTH")
@@ -65,7 +67,7 @@ class Settings(Singleton):
             config.set('points', 'points_to_append', '1')
 
             config.add_section('web')
-            config.set('web', 'enable', 'true')
+            config.set('web', 'enabled', 'true')
             config.set('web', 'port', '8888')
 
             config.add_section('print')
@@ -78,6 +80,11 @@ class Settings(Singleton):
             config = ConfigParser.RawConfigParser()
             config.read("pybot.conf")
             return config
+
+        def saveConf(self, conf):
+            with open('pybot.conf', 'wb') as configfile:
+                    conf.write(configfile)
+            self.setVars(conf)
 
 class Data(Singleton):
     def __init__(self):
