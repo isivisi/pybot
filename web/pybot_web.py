@@ -18,6 +18,7 @@ class HubHandler(tornado.web.RequestHandler):
 
     def post(self, page):
         if page == "settings":
+            settings = Settings.instance()
             print self.get_argument("botname", "")
 
 class SettingsHandler(tornado.web.RequestHandler):
@@ -38,11 +39,8 @@ def make_app():
     ], **settings)
 
 class pybot_web():
-    def __init__(self, con, settings, data):
-        self.con = con
-        self.settings = settings
-        self.data = data
-
+    def __init__(self):
+        settings = Settings.instance()
         print("[pybot.tornado.web] Web services starting on port " + str(settings.webport))
 
         app = make_app()
@@ -51,4 +49,4 @@ class pybot_web():
 
 # for testing directly
 #if __name__ == "__main__":
-#    pybot_web("","","")
+#    pybot_web()

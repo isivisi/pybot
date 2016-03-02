@@ -22,8 +22,8 @@ def main():
     pybotPrint("PYBOT %s VERSION %s BUILD %s" % (PYBOT_VERSION["status"], PYBOT_VERSION["version"], PYBOT_VERSION["build"]), "usermsg")
 
     # global data
-    settings = Settings()
-    data = Data()
+    settings = Settings.instance()
+    data = Data.instance()
 
     if (len(settings.filters) <= 0):
         pybotPrint("[pybot.main] Running with no filters")
@@ -40,7 +40,7 @@ def main():
 
     # start web services
     if (settings.web):
-        web = pybot_web.pybot_web(con, settings, data)
+        web = pybot_web.pybot_web()
 
     while con.isClosed() == False:
         if (con.connected):

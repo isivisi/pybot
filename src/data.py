@@ -3,8 +3,9 @@
 import ConfigParser
 import os
 import json
+from Singleton import *
 
-class Settings:
+class Settings(Singleton):
         def __init__(self):
             if (os.path.isfile("pybot.conf")):
                 config = self.getConf()
@@ -78,7 +79,7 @@ class Settings:
             config.read("pybot.conf")
             return config
 
-class Data:
+class Data(Singleton):
     def __init__(self):
 
         self.quotes = []
