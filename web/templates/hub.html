@@ -135,6 +135,43 @@
 					<input type="submit" class="button button-primary" value="Save Changes" />
 				</form>
 			{% end %}
+			
+			{% if page == "filters" %}
+				
+				<h3> Filters </h3>
+				<hr/>
+				</br>
+				
+				<form method="post">
+					<label for="addfilter">Add new filter:</label>
+					<input class="u-full-width" type="text" id="addfilter" name="addfilter" placeholder="filter name"/>
+					<input type="submit" value="Add" />
+				</form>
+				
+				</br>
+				<h4> Enabled </h4>
+				<table class="u-full-width">
+					<thead>
+						<tr>
+							<th> Filter Name </th>
+							<th> </th>
+						<tr>
+					<thead>
+					<tbody>
+					{% for filter in settings.filters %}
+						<tr>
+							<td class="u-full-width">
+								{{ escape(filter) }}
+							</td>
+							<td>
+								<a class="button">test</a>
+							</td>
+						</tr>
+					{% end %}
+					</tbody>
+				</table>
+			
+			{% end %}
 					
 	</div>
   
