@@ -129,7 +129,7 @@ class irc:
 
     def _filterUser(self, user, data, filter):
         sys.argv = [user, data]
-        exec(open(PWD+"//filters//"+filter).read())
+        exec(compile(open(PWD+"//filters//"+filter).read(), filter, 'exec'))
 
     def checkMod(self):
         time.sleep(120);
@@ -168,16 +168,19 @@ class irc:
         self.msg(".ban %s" % name)
         pybotPrint("[pybot.irc] Banned user %s" % name)
 
+    def send(self, msg):
+        self.socket.send(msg.encode('utf-8'))
+
     def connect(self):
         try:
             self.socket = ""
-            self.socket = socket.socket()
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.connect((self.server, self.port))
             pybotPrint("[pybot.irc] Sending user info...")
-            self.socket.send("USER %s\r\n" % self.nick)
-            self.socket.send("PASS %s\r\n" % self.password)
-            self.socket.send("NICK %s\r\n" % self.nick)
-            self.socket.send("TWITCHCLIENT 3\r\n")
+            self.send("USER %s\r\n" % self.nick)
+            self.send("PASS %s\r\n" % self.password)
+            self.send("NICK %s\r\n" % self.nick)
+            self.send("TWITCHCLIENT 3\r\n")
             #self.socket.send("CAP REQ :twitch.tv/membership") #request membership but disables chat for some reason
 
             if self.check_login_status(self.socket.recv(1024)):
@@ -195,7 +198,8 @@ class irc:
             self.closed = False
 
             self.getLoop()
-        except:
+        except Exception as e:
+            pybotPrint(e)
             pybotPrint("[pybot.irc] connection failed, retrying...")
             self.retry()
 
@@ -205,11 +209,11 @@ class irc:
         #self.msg("/mods", False)
 
     def joinchannel(self, channel):
-        self.socket.send("JOIN %s\r\n" % channel)
-        self.socket.send("WHOIS %s" % self.nick)
+        self.send("JOIN %s\r\n" % channel)
+        self.send("WHOIS %s" % self.nick)
 
     def check_login_status(self, data):
-        if re.match(r'^:(testserver\.local|tmi\.twitch\.tv) NOTICE \* :Login unsuccessful\r\n$', data):
+        if re.match(b'^:(testserver\.local|tmi\.twitch\.tv) NOTICE \* :Login unsuccessful\r\n$', data):
             return False
         else:
             return True
@@ -222,23 +226,25 @@ class irc:
 
     def msg(self, text, show=True):
         if self.connected == True:
-            self.socket.send("PRIVMSG %s :%s\r\n" % (self.channel, text))
+            self.send("PRIVMSG %s :%s\r\n" % (self.channel, text))
             if (show): pybotPrint(self.nick + " : " + text, "usermsg")
 
     def privmsg(self, user, text):
         if self.connected == True:
-            self.socket.send("PRIVMSG %s :%s\r\n" % (user, text))
+            self.send("PRIVMSG %s :%s\r\n" % (user, text))
 
     def rawmsg(self, text):
         if self.connected == True:
-            self.socket.send(text+"\r\n")
+            self.send(text+"\r\n")
 
     def get(self):
         try:
             msg = self.socket.recv(2048)
+            msg = msg.decode("utf-8")
             msg = msg.strip("\n\r")
             return msg
-        except:
+        except Exception as e:
+            pybotPrint("[pybot.irc.get] " + e)
             return "ERROR"
 
     def getSetting(self, setting):
@@ -437,7 +443,7 @@ class irc:
 
     def close(self, reconn = False):
         try:
-            self.socket.send("disconnect")
+            self.send("disconnect")
             self.socket.close()
         except:
             self.socket.close()

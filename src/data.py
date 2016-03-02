@@ -73,7 +73,7 @@ class Settings(Singleton):
             config.add_section('print')
             config.set('print', 'HTML', 'false')
 
-            with open('pybot.conf', 'wb') as configfile:
+            with open('pybot.conf', 'w') as configfile:
                 config.write(configfile)
 
         def getConf(self):
@@ -82,7 +82,7 @@ class Settings(Singleton):
             return config
 
         def saveConf(self, conf):
-            with open('pybot.conf', 'wb') as configfile:
+            with open('pybot.conf', 'w') as configfile:
                     conf.write(configfile)
             self.setVars(conf)
 
@@ -121,29 +121,22 @@ class Data(Singleton):
         config.set('userdata', 'points', json.dumps(self.points))
         config.set('commands', 'cmdlist', json.dumps(self.commands))
 
-        with open('persistent.data', 'wb') as configfile:
+        with open('persistent.data', 'w') as configfile:
                 config.write(configfile)
 
     def createConf(self):
-            config = configparser.RawConfigParser()
-            config.add_section('linkdata')
-            config.set('linkdata', 'links', '[]')
-            config.set('linkdata', 'linkbanned', '[]')
+            config = configparser.ConfigParser()
 
-            config.add_section('quotedata')
-            config.set('quotedata', 'quotes', '[]')
+            config['linkdata'] = {'links':'[]', 'linkbanned':'[]'}
+            config['quotedata'] = {'quotes':'[]'}
+            config['userdata'] = {'points':json.dumps(self.points)}
+            config['commands'] = {'cmdlist':'[]'}
 
-            config.add_section('userdata')
-            config.set('userdata', 'points', json.dumps(self.points))
-
-            config.add_section('commands')
-            config.set('commands', 'cmdlist', '[]')
-
-            with open('persistent.data', 'wb') as configfile:
+            with open('persistent.data', 'w') as configfile:
                 config.write(configfile)
 
     def getConf(self):
-        config = configparser.RawConfigParser()
+        config = configparser.ConfigParser()
         config.read("persistent.data")
         return config
 
