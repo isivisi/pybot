@@ -66,5 +66,5 @@ userlogs/*
 .idea/*
 pybot.conf
 persistent.data
-pybot.bat
+*.bat
 pybot

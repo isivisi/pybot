@@ -45,9 +45,13 @@ def main():
                 file.write("@echo off\n" + \
                 pyLoc +" pybot.py %*")
                 file.close()
+                file = open("pybot_run.bat", 'w')
+                file.write("@echo off\n" + \
+                pyLoc +" pybot.py -run")
+                file.close()
                 # sys.path.append(os.getcwd()+"\\pybot.bat")
                 # os.environ["PATH"] += os.pathsep + os.getcwd()+"\\pybot.bat"
-                print("[Setup] bat file created for windows")
+                print("[Setup] bat files created for windows")
             #TODO linux
             # print("[Setup] pybot added to system PATH")
 
