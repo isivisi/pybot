@@ -3,7 +3,7 @@
 import tornado.ioloop
 import tornado.web
 import os
-from src.data import *
+from data import *
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):

@@ -1,7 +1,6 @@
 # controller for pybot commands
 
 import os
-import thread
 from pybotextra import *
 
 PWD = "/var/www/html/pybot"

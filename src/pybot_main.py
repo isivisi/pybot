@@ -5,6 +5,7 @@
 import sys
 import threading
 
+import os
 from data import *
 from irc import irc # yea its dumb
 from pybotextra import *

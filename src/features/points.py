@@ -11,7 +11,7 @@ class Points:
         self.data = data
 
         con.addHook(self.hook)
-        threading.Thread(target=self.pintsCheck).start()
+        threading.Thread(target=self.pointsCheck).start()
         #thread.start_new_thread(self.pointsCheck, ())
 
     def pointsCheck(self):

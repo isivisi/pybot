@@ -1,7 +1,7 @@
 # pybot raffle system
 # implemented by isivisi
 
-import thread
+import threading
 import time
 import random
 from pybotextra import *
@@ -16,7 +16,8 @@ class Raffle:
         conn.addHook(self.hook)
 
         conn.msg("Raffle has begun! to join say !joinraffle in chat")
-        thread.start_new_thread(self.wait, (self.timelimit,))
+        threading.Thread(target=self.wait, args=(self.timelimit,)).start()
+        #thread.start_new_thread(self.wait, (self.timelimit,))
 
     def wait(self, timelimit):
         time.sleep(timelimit)

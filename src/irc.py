@@ -129,7 +129,7 @@ class irc:
 
     def _filterUser(self, user, data, filter):
         sys.argv = [user, data]
-        execfile(PWD+"//filters//"+filter)
+        exec(open(PWD+"//filters//"+filter).read())
 
     def checkMod(self):
         time.sleep(120);

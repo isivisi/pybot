@@ -5,10 +5,10 @@
 import os
 import sys
 import subprocess
-from src import data
+from data import *
 import pip
 
-mainLoc = os.getcwd()+"//src//PYBOT.py"
+mainLoc = os.getcwd()+"//src//pybot_main.py"
 pyLoc = sys.executable
 
 dependencies = {"tornado":"tornado>=4.3"}
@@ -34,20 +34,20 @@ def main():
                     print("[Setup] " + package + " installed")
 
             # this create default config
-            data.Settings()
+            Settings()
             print("[Setup] Config created")
 
-            data.Data()
+            Data()
             print("[Setup] Persistant data file created")
 
             if "win" in sys.platform:
                 file = open("pybot.bat", 'w')
                 file.write("@echo off\n" + \
-                pyLoc +" pybot.py %*")
+                pyLoc +" src/pybot.py %*")
                 file.close()
                 file = open("pybot_run.bat", 'w')
                 file.write("@echo off\n" + \
-                pyLoc +" pybot.py -run")
+                pyLoc +" src/pybot.py -run")
                 file.close()
                 # sys.path.append(os.getcwd()+"\\pybot.bat")
                 # os.environ["PATH"] += os.pathsep + os.getcwd()+"\\pybot.bat"
@@ -59,7 +59,7 @@ def main():
 
         elif sys.argv[1] == "--config":
             if len(sys.argv) > 2:
-                settings = data.Settings().getConf()
+                settings = Settings().getConf()
                 args = sys.argv[2].split(".")
                 settings.set(args[0], args[1], sys.argv[3])
 
