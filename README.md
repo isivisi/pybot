@@ -21,8 +21,8 @@ Pybot is an open source twitch chat bot.
 - Link grabbing
 
 ## Installation
+View full installation guide [here](https://github.com/isivisi/pybot/wiki/Installation-guide-(windows))
 
-This version of pybot is in early stages, currently you just need to:
 - pull repo
 - Run `setup_win.bat`
 - Configure your bot:
@@ -53,7 +53,7 @@ If you're running multiple bots you may want to set the compatibility setting to
 
 1. Fork it
 2. Check the issues tab and start working on a bug / enhancement
-3. Check the [wiki](https://github.com/isivisi/pybot/wiki) understand how pybot works if you're confused
+3. Check the [wiki](https://github.com/isivisi/pybot/wiki) to understand how pybot works if you're confused
 5. Submit a pull request :D
 
 ## History
