@@ -5,7 +5,7 @@ Pybot is an open source twitch chat bot.
 ### Dependencies
 `python pybot.py -setup` will take care of any missing depencencies.
 
-- [Python 2.7.9](https://www.python.org/download/releases/2.7/) with pip
+- [Python 3.5](https://www.python.org/downloads/release/python-351/)
 - [Tornado Web Framework](https://github.com/tornadoweb/tornado)
 - [Skeleton](https://github.com/dhg/Skeleton)
 
@@ -24,24 +24,30 @@ Pybot is an open source twitch chat bot.
 
 This version of pybot is in early stages, currently you just need to:
 - pull repo
-- Run `python pybot.py -setup`
+- Run `setup_win.bat`
 - Configure your bot:
  - `pybot --config bot.name botusername`
  - `pybot --config bot.auth oauth:botauthentication`
  - `pybot --config twitch.channel channeltomoderate`
 - You can view the full configure proccess [here](https://github.com/isivisi/pybot/wiki/Config)
-- Now you can start pybot with `pybot -run`
+- Now you can start pybot with `pybot -run` or use `pybot_run.bat`
+
+If you're running multiple bots you may want to set the compatibility setting to change all the command names. This adds a p to the beginning of every command so multiple bot commands dont clash. ex: `!quote` would now be `!pquote`
+- `pybot --config compatibility.append_to_commands p` 
 
 ## Usage
 
  - Commands
-  - `!quotes`
-  - `!ppermit`
-  - `!plinkgrabber`     (allows links people say to be saved)
-  - `!plinkban` 
-  - `!pcommand [add|remove|update]`
-  - `!praffle [cost:#|minpoints:#]`
-  - `!pleave`
+
+|Command|Parameters|
+|---------|-------------------|
+!quotes |
+!permit |
+!linkgrabber |
+!linkban |
+!command | add remove
+!raffle | cost:#  name:""  trigger:!raffle  minpoints:#
+!leave |
 
 ## Contributing
 

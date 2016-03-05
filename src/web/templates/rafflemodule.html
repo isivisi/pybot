@@ -1,0 +1,35 @@
+<h3>Active raffles</h3>
+    <table class="u-full-width">
+		<thead>
+			<tr>
+				<th> Name </th>
+				<th> trigger </th>
+				<th> Users Entered </th>
+                <th> </th>
+			<tr>
+		<thead>
+		<tbody>
+			{% for raffle in data.raffles %}
+				<tr>
+					<td>
+						{{ escape(raffle.params['name']) }}
+					</td>
+					<td>
+						{{ escape(str(raffle.params['trigger'])) }}
+					</td>
+					<td>
+						{{ escape(str(len(raffle.users))) }}
+					</td>
+                    <td>
+                        <div class="row u-full-width">
+                            <div class="two columns u-full-width"></div>
+                            <div class="four columns pybutton u-pull-right"><a href="/raffle/cancel/{{ escape(raffle.params['name']) }}">Cancel</a></div>
+                            <div class="six columns pybutton u-pull-right"><a href="/raffle/select/{{ escape(raffle.params['name']) }}">Choose Winner</a></div>
+
+                        </div>
+                    </td>
+				</tr>
+			{% end %}
+		</tbody>
+    </table>
+

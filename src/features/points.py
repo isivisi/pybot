@@ -1,7 +1,8 @@
 
-import thread
+import threading
 import time
 from pybotextra import *
+import globals
 
 class Points:
     def __init__(self, con, chatters, settings, data):
@@ -11,17 +12,18 @@ class Points:
         self.data = data
 
         con.addHook(self.hook)
-        thread.start_new_thread(self.pointsCheck, ())
+        threading.Thread(target=self.pointsCheck).start()
+        #thread.start_new_thread(self.pointsCheck, ())
 
     def pointsCheck(self):
-        if self.data.points:
-            time.sleep(60 * self.settings.pointsInterval)
+        if globals.data.points:
+            time.sleep(60 * globals.settings.pointsInterval)
             for user in self.chatters.mods:
-                self.data.addPoints(user, self.settings.pointsToAppend)
+                globals.data.addPoints(user, self.settings.pointsToAppend)
 
             for user in self.chatters.viewers:
-                self.data.addPoints(user, self.settings.pointsToAppend)
-            self.data.save()
+                globals.data.addPoints(user, self.settings.pointsToAppend)
+            globals.data.save()
             self.pointsCheck()
 
     def hook(self, con, msg, event):

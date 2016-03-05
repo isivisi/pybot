@@ -6,9 +6,10 @@ import os
 import random
 import socket
 import sys
-import thread
+import threading
 import time
-import urllib # py3 import urllib.request
+import urllib.request
+import traceback
 
 from pybotextra import *
 
@@ -28,13 +29,14 @@ class chatters:
         self.failures = 0						# count all the failed attempts at getting info
         self.failureMax = 10
 
-        thread.start_new_thread(self.loopChatter, ())
+        threading.Thread(target=self.loopChatter).start()
+        #thread.start_new_thread(self.loopChatter, ())
 
     # Grab json info from api and return parsed json
     def getChatterInfo(self):
         url = self.api.replace("{user}", self.user)
-        response = urllib.urlopen(url)
-        data = json.loads(response.read())
+        response = urllib.request.urlopen(url)
+        data = json.loads((response.read()).decode("utf-8"))
         return data
 
     # Update loop to constantly check for changes
@@ -56,7 +58,7 @@ class chatters:
             except:
                 self.failures += 1
                 if (self.failures >= self.failureMax):
-                    pybotPrint("[CHATTERS] Have not received any updates in a while.", "filter")
+                    pybotPrint("[pybot.chatters] Have not received any updates in a while.", "log")
                     self.failures = 0
 
 
@@ -87,6 +89,7 @@ class irc:
         self.chatters = chatters(self.user, self, self.data)
         self.settings = settings
         self.linkgrabber = False
+        self.parseSelf = False                                          # does pybot parse its own messages? for debugging
 
         self.filters = []
         for i in settings.filters:
@@ -95,14 +98,16 @@ class irc:
         filterList = ""
         for f in self.filters:
             filterList += "%s " % f.upper()
-        if (filterList != ""): pybotPrint("[PYBOT] %s filters loaded" % filterList)
+        if (filterList != ""): pybotPrint("[pybot.irc] %s filters loaded" % filterList, "log")
 
 
-        pybotPrint("[PYBOT] IRC object initialized, starting ping check...")
-        thread.start_new_thread(self.ping, ())
-        #thread.start_new_thread(self.getMods, ())
-        thread.start_new_thread(self.checkMod, ()) # waits to see if mod
-        thread.start_new_thread(self.chatTimeoutCheck, ())
+        pybotPrint("[pybot.irc] IRC object initialized, starting ping check...", "log")
+        threading.Thread(target=self.ping).start()
+        #thread.start_new_thread(self.ping, ())
+        threading.Thread(target=self.checkMod).start()
+        #thread.start_new_thread(self.checkMod, ()) # waits to see if mod
+        threading.Thread(target=self.chatTimeoutCheck).start()
+        #thread.start_new_thread(self.chatTimeoutCheck, ())
 
     def addHook(self, hook):
         self.hooks.append(hook)
@@ -114,25 +119,26 @@ class irc:
         time.sleep(60)
         self.chat_time += 1
         if (self.chat_time == self.chat_timeout_max):
-            self.msg("There has not been any activity for the past %s minutes, pybot is now disconnecting from your chat." % self.chat_timeout_max)
+            self.msg("There has not been any activity for the past %s minutes, pybot is now disconnecting from your chat." % self.chat_timeout_max, "log")
             self.close()
         else:
             self.chatTimeoutCheck()
 
     def filter(self, user, data):
         for i in self.filters:
-            thread.start_new_thread(self._filterUser, (user, data, i))
+            threading.Thread(target=self._filterUser, args=(user, data, i)).start()
+            #thread.start_new_thread(self._filterUser, (user, data, i))
 
     def _filterUser(self, user, data, filter):
         sys.argv = [user, data]
-        execfile(PWD+"//filters//"+filter)
+        exec(compile(open(PWD+"//filters//"+filter).read(), filter, 'exec'))
 
     def checkMod(self):
         time.sleep(120);
-        pybotPrint("[PYBOT] checking mod status...")
+        pybotPrint("[pybot.irc] checking mod status...", "log")
         pybotPrint("%s" % self.botIsMod)
         if not (self.botIsMod):
-            self.msg("Pybot is not a mod and will not function properly.")
+            self.msg("Pybot is not a mod and will not function properly.", "log")
 
     def getCmdControl(self):
         return self.cmdController
@@ -158,32 +164,35 @@ class irc:
 
     def kick(self, name):
         self.msg(".timeout %s" % name)
-        pybotPrint("[PYBOT] Kicked user %s" % name)
+        pybotPrint("[pybot.irc] Kicked user %s" % name, "log")
 
     def ban(self, name):
         self.msg(".ban %s" % name)
-        pybotPrint("[PYBOT] Banned user %s" % name)
+        pybotPrint("[pybot.irc] Banned user %s" % name, "log")
+
+    def send(self, msg):
+        self.socket.send(msg.encode('utf-8'))
 
     def connect(self):
         try:
             self.socket = ""
-            self.socket = socket.socket()
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.connect((self.server, self.port))
-            pybotPrint("[PYBOT] Sending user info...")
-            self.socket.send("USER %s\r\n" % self.nick)
-            self.socket.send("PASS %s\r\n" % self.password)
-            self.socket.send("NICK %s\r\n" % self.nick)
-            self.socket.send("TWITCHCLIENT 3\r\n")
+            pybotPrint("[pybot.irc] Sending user info...", "log")
+            self.send("USER %s\r\n" % self.nick)
+            self.send("PASS %s\r\n" % self.password)
+            self.send("NICK %s\r\n" % self.nick)
+            self.send("TWITCHCLIENT 3\r\n")
             #self.socket.send("CAP REQ :twitch.tv/membership") #request membership but disables chat for some reason
 
             if self.check_login_status(self.socket.recv(1024)):
-                pybotPrint("[PYBOT] login success")
+                pybotPrint("[pybot.irc] login success", "log")
                 self.msg("Pybot has connected to your chat.")
             else:
-                pybotPrint("[PYBOT] login failed")
+                pybotPrint("[pybot.irc] login failed", "log")
                 self.retry()
 
-            pybotPrint("[PYBOT] Joining channel " + self.channel)
+            pybotPrint("[pybot.irc] Joining channel " + self.channel, "log")
             self.joinchannel(self.channel)
 
             self.connected = True
@@ -191,8 +200,9 @@ class irc:
             self.closed = False
 
             self.getLoop()
-        except:
-            pybotPrint("[IRC] connection failed, retrying...")
+        except Exception as e:
+            pybotPrint(e, "log")
+            pybotPrint("[pybot.irc] connection failed, retrying...", "log")
             self.retry()
 
     def getMods(self):
@@ -201,40 +211,45 @@ class irc:
         #self.msg("/mods", False)
 
     def joinchannel(self, channel):
-        self.socket.send("JOIN %s\r\n" % channel)
-        self.socket.send("WHOIS %s" % self.nick)
+        self.send("JOIN %s\r\n" % channel)
+        self.send("WHOIS %s" % self.nick)
 
     def check_login_status(self, data):
-        if re.match(r'^:(testserver\.local|tmi\.twitch\.tv) NOTICE \* :Login unsuccessful\r\n$', data):
+        if re.match(b'^:(testserver\.local|tmi\.twitch\.tv) NOTICE \* :Login unsuccessful\r\n$', data):
             return False
         else:
             return True
 
     def retry(self):
         self.close(True)
-        pybotPrint("Retrying connection in 15 seconds...")
+        pybotPrint("Retrying connection in 15 seconds...", "log")
         time.sleep(15)
         self.connect()
 
-    def msg(self, text, show=True):
+    def msg(self, text, show=True, parse=False):
         if self.connected == True:
-            self.socket.send("PRIVMSG %s :%s\r\n" % (self.channel, text))
+            self.send("PRIVMSG %s :%s\r\n" % (self.channel, text))
             if (show): pybotPrint(self.nick + " : " + text, "usermsg")
+            #if (parse): self.parseSelf = ":%s!%s@%s.tmi.twitch.tv PRIVMSG %s" % (self.nick, self.nick, self.nick, text)
 
     def privmsg(self, user, text):
         if self.connected == True:
-            self.socket.send("PRIVMSG %s :%s\r\n" % (user, text))
+            self.send("PRIVMSG %s :%s\r\n" % (user, text))
 
     def rawmsg(self, text):
         if self.connected == True:
-            self.socket.send(text+"\r\n")
+            self.send(text+"\r\n")
 
     def get(self):
         try:
             msg = self.socket.recv(2048)
+            msg = msg.decode("utf-8")
             msg = msg.strip("\n\r")
             return msg
-        except:
+        except ConnectionAbortedError:
+            print("[pybot.irc.get] ConnectionAbortedError in get loop")
+        except Exception as e:
+            pybotPrint("[pybot.irc.get] " + e, "log")
             return "ERROR"
 
     def getSetting(self, setting):
@@ -246,7 +261,8 @@ class irc:
         try:
             while self.connected == True:
                 messageFull = self.get()
-                messageList = messageFull.split('\r\n')
+                if messageFull != None:
+                    messageList = messageFull.split('\r\n')
 
                 #print messageFull
                 #twitchnotify :  1 viewer resubscribed while you were away!
@@ -330,8 +346,8 @@ class irc:
                     if self.connected == True and ev != "jtv":
                         for hook in self.hooks:
                             hook(self, msg, ev)
-        except Exception as e:
-            pybotPrint(e.message)
+        except:
+            traceback.print_exc()
             self.retry()
 
     def isLinkBanned(self, name):
@@ -378,7 +394,7 @@ class irc:
     def addMode(self, user, mode):
 
         if (user.strip() == self.nick and mode == "+o" and "o" not in self.getMode(user)):
-            self.msg("Pybot has successfully joined your channel as a mod.")
+            self.msg("Pybot has successfully joined your channel as a mod.", "log")
             self.botIsMod = True
         elif (user.strip() == self.nick and mode == "-o"):
             self.botIsMod = False
@@ -424,7 +440,7 @@ class irc:
             if self.connected:
                 self.ping_timeout = self.ping_timeout - 1
                 if self.ping_timeout <= 0: # timed out!
-                    pybotPrint("Bot has timed out!, reconnecting...")
+                    pybotPrint("Bot has timed out!, reconnecting...", "log")
                     self.retry()
             time.sleep(1)
 
@@ -432,12 +448,15 @@ class irc:
         return self.closed
 
     def close(self, reconn = False):
-        try:
-            self.socket.send("disconnect")
-            self.socket.close()
-        except:
-            self.socket.close()
+        if self.socket != "":
+            try:
+                self.send("disconnect")
+                self.socket.close()
+            except:
+                self.socket.close()
 
         self.socket = ""
         self.connected = False
         if (reconn == False): self.closed = True
+
+        print("[pybot.irc] Socket closed")

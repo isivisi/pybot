@@ -1,79 +1,98 @@
 # for persistent data
 
-import ConfigParser
+import configparser
 import os
 import json
+from Singleton import *
 
-class Settings:
+def toBool(str):
+    return str == "True" or str == "true"
+
+class Settings(Singleton):
         def __init__(self):
             if (os.path.isfile("pybot.conf")):
-                config = self.getConf()
+                self.config = self.getConf()
             else:
                 self.createConf()
-                config = self.getConf()
+                self.config = self.getConf()
+            self.setVars(self.config)
+
+        def setVars(self, config):
+            self.config = config
 
             # name and auth for the user that the bot will speak from
-            self.NAME = config.get("bot", "NAME")
-            self.AUTH = config.get("bot", "AUTH")
+            self.NAME = config['bot']['NAME']
+            self.AUTH = config['bot']['AUTH']
 
             # twitch settings
-            self.HOST = config.get("twitch", "HOST")
-            self.PORT = config.getint("twitch", "PORT")
-            self.channel = config.get("twitch", "channel")
+            self.HOST = config['twitch']['HOST']
+            self.PORT = int(config['twitch']['PORT'])
+            self.channel = config['twitch']['channel']
 
             # filters
-            self.filters = json.loads(config.get("filters", "activeFilters"))
+            self.filters = json.loads(config['filters']['activeFilters'])
 
             # features
-            self.linkgrabber = config.getboolean("features", "linkgrabber")
-            self.quotes = config.getboolean("features", "quotes")
-            self.raffle = config.getboolean("features", "raffle")
+            self.linkgrabber = toBool(config['features']['linkgrabber'])
+            self.quotes = toBool(config['features']['quotes'])
+            self.raffle = toBool(config['features']['raffle'])
 
-            self.points = config.getboolean('points', 'enabled')
-            self.pointsToAppend = config.getint('points', 'points_to_append')
-            self.pointsInterval = config.getfloat('points', 'interval_in_minutes')
+            self.points = toBool(config['points']['enabled'])
+            self.pointsToAppend = int(config['points']['points_to_append'])
+            self.pointsInterval = float(config['points']['interval_in_minutes'])
+
+            self.web = toBool(config['web']['enabled'])
+            self.webport = int(config['web']['port'])
 
             # printing settings
-            self.HTML = config.getboolean("print", "HTML")
+            self.HTML = toBool(config['print']['html'])
+
+        def addFilter(self, filter):
+            self.filters.append(filter)
+            self.config['filters']['activeFilters'] = json.dumps(self.filters)
+            self.saveConf()
+
+        def removeFilter(self, filter):
+            self.filters.remove(filter)
+            self.config['filters']['activeFilters'] = json.dumps(self.filters)
+            self.saveConf()
 
         def createConf(self):
-            config = ConfigParser.RawConfigParser()
-            config.add_section('bot')
-            config.set('bot', 'NAME', 'usernameforbot')
-            config.set('bot', 'AUTH', 'autho:forbot')
+            config = configparser.ConfigParser()
 
-            config.add_section('twitch')
-            config.set('twitch', 'HOST', 'irc.twitch.tv')
-            config.set('twitch', 'PORT', '6667')
-            config.set('twitch', 'channel', 'channelName')
+            config['bot'] = {'NAME':'usernameforbot', 'AUTH':'oauth:botauthhere'}
+            config['twitch'] = {'HOST':'irc.twitch.tv', 'PORT':'6667', 'channel':'channelName'}
+            config['filters'] = {'activeFilters':'["length", "profanity", "repetition", "uppercase", "websites"]'}
+            config['features'] = {'linkgrabber':'False', 'quotes':'True', 'raffle':'True'}
+            config['points'] = {'enabled':'true', 'interval_in_minutes':'15.0', 'points_to_append':'1'}
+            config['compatibility'] = {'append_to_commands':''}
+            config['web'] = {'enabled':'True', 'port':'8888'}
+            config['print'] = {'HTML':'False'}
 
-            config.add_section('filters')
-            config.set('filters', 'activeFilters', '["length", "profanity", "repetition", "uppercase", "websites"]')
-
-            config.add_section('features')
-            config.set('features', 'linkgrabber', 'false')
-            config.set('features', 'quotes', 'true')
-            config.set('features', 'raffle', 'true')
-
-            config.add_section('points')
-            config.set('points', 'enabled', 'false')
-            config.set('points', 'interval_in_minutes', '15.0')
-            config.set('points', 'points_to_append', '1')
-
-            config.add_section('print')
-            config.set('print', 'HTML', 'false')
-
-            with open('pybot.conf', 'wb') as configfile:
+            with open('pybot.conf', 'w') as configfile:
                 config.write(configfile)
 
         def getConf(self):
-            config = ConfigParser.RawConfigParser()
+            config = configparser.ConfigParser()
             config.read("pybot.conf")
             return config
 
-class Data:
+        def saveConf(self, conf=None):
+            if (conf == None):
+                conf = self.config
+            with open('pybot.conf', 'w') as configfile:
+                conf.write(configfile)
+            self.setVars(conf)
+
+class Data(Singleton):
     def __init__(self):
 
+        # live non saved data
+        self.raffles = []
+        self.logs = []
+
+
+        # saved data
         self.quotes = []
         self.linkbanned = []
         self.links = []
@@ -82,6 +101,14 @@ class Data:
         self.commands = []
 
         self.read()
+
+    def getRaffle(self, name):
+        raffle = False
+        for r in Data.instance().raffles:
+            if r.params["name"] == name:
+                raffle = r
+                break
+        return raffle
 
     def read(self, set = True):
         if (os.path.isfile("persistent.data")):
@@ -106,29 +133,22 @@ class Data:
         config.set('userdata', 'points', json.dumps(self.points))
         config.set('commands', 'cmdlist', json.dumps(self.commands))
 
-        with open('persistent.data', 'wb') as configfile:
+        with open('persistent.data', 'w') as configfile:
                 config.write(configfile)
 
     def createConf(self):
-            config = ConfigParser.RawConfigParser()
-            config.add_section('linkdata')
-            config.set('linkdata', 'links', '[]')
-            config.set('linkdata', 'linkbanned', '[]')
+            config = configparser.ConfigParser()
 
-            config.add_section('quotedata')
-            config.set('quotedata', 'quotes', '[]')
+            config['linkdata'] = {'links':'[]', 'linkbanned':'[]'}
+            config['quotedata'] = {'quotes':'[]'}
+            config['userdata'] = {'points':json.dumps(self.points)}
+            config['commands'] = {'cmdlist':'[]'}
 
-            config.add_section('userdata')
-            config.set('userdata', 'points', json.dumps(self.points))
-
-            config.add_section('commands')
-            config.set('commands', 'cmdlist', '[]')
-
-            with open('persistent.data', 'wb') as configfile:
+            with open('persistent.data', 'w') as configfile:
                 config.write(configfile)
 
     def getConf(self):
-        config = ConfigParser.RawConfigParser()
+        config = configparser.ConfigParser()
         config.read("persistent.data")
         return config
 

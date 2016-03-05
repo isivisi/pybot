@@ -64,7 +64,8 @@ target/
 #pybot stuff
 userlogs/*
 .idea/*
-pybot.conf
+*.conf
 persistent.data
 pybot.bat
+pybot_run.bat
 pybot
