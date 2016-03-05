@@ -2,7 +2,6 @@
 
 import sys
 import random
-from pybotextra import pybotPrint
 
 name = sys.argv[0]
 msg = sys.argv[1]

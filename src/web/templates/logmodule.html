@@ -1,0 +1,42 @@
+
+<h4>bot log</h4>
+<div class="row scrollbar" id="logs">
+    {% for log in data.logs %}
+    <div class="row">
+        <div class="twelve columns log">
+            {{ escape(log) }}
+        </div>
+    </div>
+    {% end %}
+</div>
+
+<script>
+    var ws = new WebSocket("ws://localhost:8888/websocket");
+    var oldlogs = 0;
+    ws.onopen = function() {
+       ws.send("Connected");
+    };
+    ws.onmessage = function (evt) {
+        //logs = JSON.parse(evt.data);
+        logs = evt.data.split("---!---");
+
+        if (oldlogs < logs.length) {
+            html = "";
+            for (var i = 0; i < logs.length-1; i++) {
+                html += " <div class='row'> <div class='twelve columns log'>";
+                html += logs[i];
+                html += "</div></div>";
+            }
+            element = document.getElementById("logs");
+            element.innerHTML = html;
+            element.scrollTop = element.scrollHeight;
+        }
+        oldlogs = logs.length;
+    };
+
+    window.onload = function(){
+		setInterval(function(){
+			ws.send("getlogs")
+	},500);}
+
+</script>

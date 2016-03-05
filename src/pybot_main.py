@@ -1,50 +1,67 @@
-#!python2.7
+
 # Pybot twitch irc bot
 # Pybot is designed to monitor and admin your twitch chat
 
 import sys
-import thread
+import threading
 
+import os
 from data import *
 from irc import irc # yea its dumb
 from pybotextra import *
 from features.raffle import Raffle
 from features.commands import Commands
 from features.points import Points
+from web import pybot_web
+
+import globals
 
 # VERSION INFO
 PYBOT_VERSION = {"status": "BETA", "version": 0, "build": 121}
 
 PWD = os.getcwd()
+if ("pybot\\src" in PWD):
+    os.chdir(PWD.replace("\\pybot\\src", "\\pybot"))
+    PWD = os.getcwd()
 
 def main():
+    # global data
+    settings = Settings.instance()
+    data = Data.instance()
+
+    globals.settings = settings
+    globals.data = data
+
     pybotPrint("PYBOT %s VERSION %s BUILD %s" % (PYBOT_VERSION["status"], PYBOT_VERSION["version"], PYBOT_VERSION["build"]), "usermsg")
 
-    # global data
-    settings = Settings()
-    data = Data()
-
     if (len(settings.filters) <= 0):
-        pybotPrint("[PYBOT] Running with no filters")
+        pybotPrint("[pybot.main] Running with no filters", "log")
 
     # create the irc connection and set the hook for the incoming feed
     con = irc(settings, feed, data)
+    globals.con = con
 
     # connect separate features to the connection
     cmds = Commands(con)
-    points = Points(con, con.chatters, settings, data)
+
+    if (settings.points):
+        points = Points(con, con.chatters, settings, data)
 
     # start connection in new thread
-    thread.start_new_thread(con.connect, ())
+    #thread.start_new_thread(con.connect, ())
+    threading.Thread(target=con.connect).start()
 
+    # start web services
+    if (settings.web):
+        web = pybot_web.pybot_web(con)
+        threading.Thread(target=web.startWebService).start()
     while con.isClosed() == False:
         if (con.connected):
-            input = raw_input("")
-            if (input):
-                con.msg(input)
+            inp = input("")
+            if (inp):
+                con.msg(inp)
 
-
-    pybotPrint("[PYBOT] connection ended")
+    pybotPrint("[PYBOT] connection ended", "log")
     exit()
 
 # Once the irc connection is made it dumps the live feed here along with any events it finds
@@ -81,26 +98,20 @@ def feed(con, msg, event):
         if con.isMod(name) == False and name != "jtv":
             con.filter(name, text)
 
-        if checkIfCommand(text, "!praffle"):
+        if checkIfCommand(text, "!raffle"):
             if con.settings.raffle:
-                raffle = Raffle(con, con.data)
-                texsplit = text.replace("!praffle", '').split(" ")
+                texsplit = text.replace("!raffle", '').split(" ")
+                raffle = Raffle(con, con.data, texsplit)
+                con.data.raffles.append(raffle)
 
-                for pair in texsplit:
-                    try:
-                        split = pair.split(":")
-                        raffle.setParam(split[0], split[1])
-                    except:
-                        nothing = 0
-
-        elif checkIfCommand(text, "!pleave"):
+        elif checkIfCommand(text, "!leave"):
             if con.isMod(name):
                 con.msg("Bye!");
                 con.close()
             else:
                 con.msg('%s, you do not have access to this command.' % name)
 
-        elif checkIfCommand(text, "!ppermit"):
+        elif checkIfCommand(text, "!permit"):
             cmd_args = text.split(" ")
             if con.isMod(name):
                 con.msg("%s can post a link" % cmd_args[2])
@@ -108,7 +119,7 @@ def feed(con, msg, event):
             else:
                 con.msg('%s, you do not have access to this command.' % name)
 
-        elif checkIfCommand(text, "!pcommand add"):
+        elif checkIfCommand(text, "!command add"):
             if con.isMod(name):
                 trigger = msg.split(' ')[2]
                 text = msg.split(' ')[3]
@@ -117,7 +128,7 @@ def feed(con, msg, event):
                 cmd.addCommand(trigger, text, permissions)
             else:
                 con.msg('%s, you do not have access to this command.' % name)
-        elif checkIfCommand(text, "!plinkgrabber"):
+        elif checkIfCommand(text, "!linkgrabber"):
             if con.isMod(name):
                 if (con.linkgrabber):
                     con.linkgrabber = False
@@ -131,15 +142,16 @@ def feed(con, msg, event):
 
         elif checkIfCommand(text, "!quote"):
             if con.settings.quotes:
-                quote = text.replace("!quote", "")
-                if (quote.strip() != ""):
-                    con.addQuote(name, text.replace("!quote", ""))
+                quote = text.split("quote", 1)
+                if (len(quote) > 1 and quote[1] != ''):
+                    print(quote)
+                    con.addQuote(name, quote[1])
                     con.msg("Quote as been added.")
                 else:
                     if (con.getRandomQuote()):
                         con.msg(con.getRandomQuote())
 
-        elif checkIfCommand(text, "!plinkban"):
+        elif checkIfCommand(text, "!linkban"):
             cmd_args = text.split(" ")
             if con.isMod(name):
                 #try:

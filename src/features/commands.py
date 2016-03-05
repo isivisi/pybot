@@ -1,7 +1,6 @@
 # controller for pybot commands
 
 import os
-import thread
 from pybotextra import *
 
 PWD = "/var/www/html/pybot"
@@ -41,7 +40,7 @@ class Commands:
         for command in commands:
             split = command.split(',')
             self.commands.append(Command(split[0], split[1], split[2], split[3]))
-        pybotPrint("[CMDS] " + str(len(commands)) + " custom commands loaded.")
+        pybotPrint("[pybot.commands] " + str(len(commands)) + " custom commands loaded.")
 
     def addCommand(self, trigger, args, message, permissions):
         cmd = Command(trigger, args, message, permissions)
@@ -66,7 +65,7 @@ class Commands:
             text = msg.split("PRIVMSG")[1].replace('%s :' % con.channel, '')
 
             for command in self.commands:
-                if checkIfCommand(text, command.trigger):
+                if checkIfCommand(text, command.trigger, addc=False):
                     self.con.msg(command.message)
                     break
 

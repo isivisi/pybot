@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  {% if page != "" %}
+    <title>Pybot {{ escape(page.title()) }}</title>
+  {% else %}
+    <title>Pybot Hub</title>
+  {% end %}
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="{{ static_url("css/normalize.css") }}">
+  <link rel="stylesheet" href="{{ static_url("css/skeleton.css") }}">
+    <link rel="stylesheet" href="{{ static_url("css/custom.css") }}">
+
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+	
+	<div class="container">
+		<section class="header">
+
+            {% if page != "" %}
+                <h3 class=title"> {{ escape(page.title()) }}</h3>
+            {% else %}
+                <h3 class="title">Pybot Hub</h3>
+            {% end %}
+
+		</section>
+
+		<div class="row">
+            <div class="three columns sidenav">
+
+                 <center><h4>{{ escape(settings.NAME.title()) }} controls</h4></center>
+                <div class="row u-full-width">
+
+                    <div class="row u-full-width">
+                        <div class="six columns"><a class="button button-primary u-full-width" href="/bot/rejoin">Rejoin</a></div>
+                        <div class="six columns"><a class="button button-primary u-full-width" href="/bot/leave">Leave</a></div>
+                    </div>
+                </div>
+                <br/>
+                <center><h4>Navigation</h4></center>
+                <div class="row u-full-width">
+                    <div class="twelve columns pybutton"><a href="/hub">Hub</a></div>
+                </div>
+                <div class="row u-full-width">
+                    <div class="twelve columns pybutton"><a href="/hub/filters">Filters</a></div>
+                </div>
+                <div class="row u-full-width">
+                    <div class="thelve columns pybutton"><a href="/hub/settings">Settings</a></div>
+                </div>
+
+                <br/>
+                <div class="row u-full-width">
+                    <div class="twelve columns">
+                        {% module UserPoints(5) %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="nine columns">
+                {% if page == "" %}
+                     <div class="row u-full-width">
+                        {% if len(data.raffles) > 0 %}
+                            <div class="twelve columns">
+                                {% module Raffle() %}
+                            </div>
+                        {% end %}
+                     </div>
+                    <br/>
+                    {% module Logs() %}
+
+                {% end %}
+
+                {% if page == "settings" %}
+                    <h3> Settings </h3>
+                    <hr/>
+
+                    <form method="post">
+                        <h4> Bot </h4>
+                        <div class="row">
+                            <div class="six columns">
+                                <label for="botname">Bot name</label>
+                                <input class="u-full-width" id="botname" name="bot.name" type="text" value="{{ escape(settings.NAME) }}" />
+                            </div>
+                            <div class="six columns">
+                                <label for="botauth">Bot Auth</label>
+                                <input class="u-full-width" id="botauth" name="bot.auth" type="password" value="{{ escape(settings.AUTH) }}" />
+                            </div>
+                        </div>
+                        </br>
+                        <h4> Twitch </h4>
+                        <table class="u-full-width">
+                            <tr>
+                                <td>host</td>
+                                <td><input class="u-full-width" type="text" name="twitch.host" value="{{ escape(settings.HOST) }}" /></td>
+                            </tr>
+                            <tr>
+                                <td>port</td>
+                                <td><input class="u-full-width" type="text" name="twitch.port" value="{{ escape(str(settings.PORT)) }}" /></td>
+                            </tr>
+                            <tr>
+                                <td>channel</td>
+                                <td><input class="u-full-width" type="text" name="twitch.channel" value="{{ escape(settings.channel) }}" /></td>
+                            </tr>
+                        </table>
+                        </br>
+                        <h4> Compatibility </h4>
+                        <div class="row">
+                            <div class="six columns">
+                                <label for="addtoc">Append to commands:</label>
+                                <input class="u-full-width" id="addtoc" name="compatibility.append_to_commands" type="text" value="{{ escape(settings.config['compatibility']['append_to_commands']) }}" />
+                                <p>This will be added to the beginning of every command to prevent any issues with other bots. ex: adding p means !quotes is now !pqoutes. This does not affect custom commands</p>
+                            </div>
+                        </div>
+                        <input type="submit" class="button button-primary" value="Save Changes" />
+                    </form>
+                {% end %}
+
+                {% if page == "filters" %}
+
+                    <h3> Filters </h3>
+                    <hr/>
+                    </br>
+
+                    <form method="post" action="/filters/">
+                        <label for="addfilter">Add new filter:</label>
+                        <input class="u-full-width" type="text" id="addfilter" name="addfilter" placeholder="filter name"/>
+                        <input type="submit" value="Add" />
+                    </form>
+
+                    </br>
+                    <h4> Enabled </h4>
+                    <table class="u-full-width">
+                        <thead>
+                            <tr>
+                                <th> Filter Name </th>
+                                <th> </th>
+                            <tr>
+                        <thead>
+                        <tbody>
+                        {% for filter in settings.filters %}
+                            <tr>
+                                <td class="u-full-width">
+                                    {{ escape(filter) }}
+                                </td>
+                                <td>
+                                    <div class="row u-full-width">
+                                        <div class="two columns u-full-width"></div>
+                                        <div class="four columns pybutton u-pull-right"><a href="/filters/remove/{{ escape(filter) }}">Remove</a></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% end %}
+                        </tbody>
+                    </table>
+
+                {% end %}
+			</div>
+        </div>
+	</div>
+  
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>

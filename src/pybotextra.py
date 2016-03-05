@@ -1,17 +1,22 @@
-from data import Settings
+import globals
 import re
 
 def pybotPrint(text, mode=""):
-    settings = Settings()
+    settings = globals.settings
     if (settings.HTML):
-        print "<div class='pybot-out-" + mode + "'>" + text + "</div>"
+        print("<div class='pybot-out-" + mode + "'>" + text + "</div>")
     else:
-        print text
+        print(text)
+        globals.data.logs.append(text)
 
-def checkIfCommand(text, *cmds):
+def checkIfCommand(text, *cmds_, addc=True):
     found = False
+    cmds = list(cmds_)
     i = 0
     concat = ""
+    app = globals.settings.config['compatibility']['append_to_commands']
+    if app != '' and addc:
+        cmds[0] = cmds[0][0] + app + cmds[0][1:]
 
     for cmd in cmds:
         regx = re.compile('^' + concat + '(' + cmd + ') *', re.IGNORECASE)

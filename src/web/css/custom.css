@@ -1,0 +1,63 @@
+.header {
+  margin-top: 6rem;
+  text-align: center; 
+}
+
+.container {
+  max-width: 100%;
+}
+
+.nav {
+	text-align: center;
+}
+
+
+.pybutton a:link {
+    color: #222;
+    text-decoration: none;
+}
+
+.pybutton a:visited {
+    color: #222;
+    text-decoration: none;
+}
+
+.pybutton a:hover {
+    color: #222;
+    text-decoration: underline;
+}
+
+.pybutton a:active {
+    color: #222;
+    text-decoration: underline;
+}
+
+.pybutton {
+    margin-top: 5px;
+    background: #E8E8E8;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    height: 30px;
+    line-height: 30px;
+    font-weight: 600;
+    letter-spacing: .1rem;
+}
+
+.scrollbar {
+    overflow-y: auto;
+    height: 300px;
+}
+
+.log {
+    background: #E8E8E8;
+    color: #222;
+    font-size: 1rem;
+    height: 30px;
+    line-height: 30px;
+    font-weight: 600;
+    letter-spacing: .1rem;
+    padding: 1rem;
+}

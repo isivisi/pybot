@@ -5,10 +5,17 @@
 import os
 import sys
 import subprocess
-from src import data
+from data import *
+import pip
 
-mainLoc = os.getcwd()+"//src//PYBOT.py"
+if ("\\pybot\\src" in os.getcwd()):
+    mainLoc = os.getcwd()+"\\pybot_main.py"
+else:
+    mainLoc = os.getcwd()+"\\src\\pybot_main.py"
+
 pyLoc = sys.executable
+
+dependencies = {"tornado":"tornado>=4.3"}
 
 def main():
 
@@ -16,24 +23,39 @@ def main():
 
         if sys.argv[1] == "-run":
             print ("Starting main pybot process...")
-            subprocess.call([pyLoc, mainLoc])
+            subprocess.call([pyLoc, mainLoc], cwd=os.getcwd())
 
         elif sys.argv[1] == "-setup":
             print("Pybot is setting up...")
+
+            print("[Setup] Installing dependencies...")
+            for package in dependencies.keys():
+                try:
+                    __import__(package)
+                    print("[Setup] " + package + " already installed")
+                except:
+                    pip.main(['install', dependencies[package]])
+                    print("[Setup] " + package + " installed")
+
             # this create default config
-            data.Settings()
+            Settings()
             print("[Setup] Config created")
-            data.Data()
+
+            Data()
             print("[Setup] Persistant data file created")
 
             if "win" in sys.platform:
                 file = open("pybot.bat", 'w')
                 file.write("@echo off\n" + \
-                pyLoc +" pybot.py %*")
+                '"' + pyLoc + '"' +" src/pybot.py %*\n")
+                file.close()
+                file = open("pybot_run.bat", 'w')
+                file.write("@echo off\n" + \
+                '"' + pyLoc + '"' +" src/pybot.py -run\n")
                 file.close()
                 # sys.path.append(os.getcwd()+"\\pybot.bat")
                 # os.environ["PATH"] += os.pathsep + os.getcwd()+"\\pybot.bat"
-                print("[Setup] bat file created for windows")
+                print("[Setup] bat files created for windows")
             #TODO linux
             # print("[Setup] pybot added to system PATH")
 
@@ -41,11 +63,11 @@ def main():
 
         elif sys.argv[1] == "--config":
             if len(sys.argv) > 2:
-                settings = data.Settings().getConf()
+                settings = Settings().getConf()
                 args = sys.argv[2].split(".")
                 settings.set(args[0], args[1], sys.argv[3])
 
-                with open('pybot.conf', 'wb') as configfile:
+                with open('pybot.conf', 'w') as configfile:
                     settings.write(configfile)
             else:
                 print("Invalid use, type pybot -help")

@@ -1,0 +1,30 @@
+{% if top > 0 %}
+    <h3> Top {{ escape(str(top)) }} users</h3>
+{% else %}
+    <h3> Users </h3>
+{% end %}
+    <table class="u-full-width">
+        <thread>
+            <tr>
+                <th>Name</th>
+                <th>Points</th>
+            </tr>
+        </thread>
+        <tbody>
+            {% if top > 0 %}
+                {% for name in sorted(data.points)[:top] %}
+                <tr>
+                    <td> {{ escape(name) }} </td>
+                    <td> {{ escape(str(data.points[name])) }} </td>
+                </tr>
+                {% end %}
+            {% else %}
+                {% for name in data.points.keys() %}
+                <tr>
+                    <td> {{ escape(name) }} </td>
+                    <td> {{ escape(str(data.points[name])) }} </td>
+                </tr>
+                {% end %}
+            {% end %}
+        </tbody>
+    </table>
