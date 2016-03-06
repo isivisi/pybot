@@ -39,9 +39,9 @@ If you're running multiple bots you may want to set the compatibility setting to
 
  - Commands
 
-|Command|Parameters|
-|---------|-------------------|
-!quotes |
+|Command|Parameters|wiki link
+|---------|-------------------|----------|
+!quotes ||[Quotes](https://github.com/isivisi/pybot/wiki/quote)
 !permit |
 !linkgrabber |
 !linkban |
