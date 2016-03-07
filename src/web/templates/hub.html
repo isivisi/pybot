@@ -70,9 +70,11 @@
                     <div class="twelve columns pybutton"><a href="/hub/filters">Filters</a></div>
                 </div>
                 <div class="row u-full-width">
+                    <div class="thelve columns pybutton"><a href="/hub/links">Links</a></div>
+                </div>
+                <div class="row u-full-width">
                     <div class="thelve columns pybutton"><a href="/hub/settings">Settings</a></div>
                 </div>
-
                 <br/>
                 <div class="row u-full-width">
                     <div class="twelve columns">
@@ -178,6 +180,9 @@
                         </tbody>
                     </table>
 
+                {% end %}
+                {% if page == "links" %}
+                    {% module Links() %}
                 {% end %}
 			</div>
         </div>

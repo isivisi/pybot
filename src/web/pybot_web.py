@@ -79,6 +79,25 @@ class FilterHandler(tornado.web.RequestHandler):
             globals.settings.addFilter(filter)
             self.redirect("/hub/filters")
 
+class LinkHandler(tornado.web.RequestHandler):
+    def get(self, action):
+        split = action.split("/")
+        data = globals.data
+        if len(split) >= 1:
+            act = split[0]
+            if act == "remove":
+                user = split[1]
+                del globals.data.links[user]
+                self.redirect("/hub/links")
+            elif act == "random":
+                if len(data.links) > 0:
+                    self.render("templates/link.html", message=data.links[random.sample(list(data.links), 1)[0]])
+                else:
+                    self.redirect("/hub/links")
+            elif act == "removeall":
+                data.links.clear()
+                self.redirect("/hub/links")
+
 class HubHandler(tornado.web.RequestHandler):
     def get(self, page):
         data = globals.data
@@ -118,7 +137,8 @@ def make_app():
         (r"/bot/(.*)", BotHandler),
         (r"/websocket", SocketHandler),
         (r"/raffle/(.*)", RaffleHandler),
-        (r"/filters/(.*)", FilterHandler)
+        (r"/filters/(.*)", FilterHandler),
+        (r"/links/(.*)", LinkHandler)
         #(r"/static", tornado.web.StaticFileHander, dict(path=settings['static_path]'])),
     ], **settings)
 
