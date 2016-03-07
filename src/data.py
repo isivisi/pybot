@@ -95,7 +95,7 @@ class Data(Singleton):
         # saved data
         self.quotes = []
         self.linkbanned = []
-        self.links = []
+        self.links = {}
 
         self.points = {"name": 0}
         self.commands = []
@@ -139,7 +139,7 @@ class Data(Singleton):
     def createConf(self):
             config = configparser.ConfigParser()
 
-            config['linkdata'] = {'links':'[]', 'linkbanned':'[]'}
+            config['linkdata'] = {'links':json.dumps(self.links), 'linkbanned':'[]'}
             config['quotedata'] = {'quotes':'[]'}
             config['userdata'] = {'points':json.dumps(self.points)}
             config['commands'] = {'cmdlist':'[]'}

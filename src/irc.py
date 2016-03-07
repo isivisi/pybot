@@ -381,9 +381,8 @@ class irc:
         if self.isLinkBanned(name) == False:
             for filter in filters:
                 if filter in text.lower():
-                    pybotPrint("link found!")
                     #self.mysql.query("INSERT INTO link values (null, '%s', '%s', '%s')" % (self.channel, text, name))
-                    self.data.links.append(text)
+                    self.data.links[name] = text
                     self.data.save()
                     self.msg(name + ", your link has been grabbed.")
                     break
@@ -445,7 +444,10 @@ class irc:
             time.sleep(1)
 
     def isClosed(self):
-        return self.closed
+        try:
+            return self.closed
+        except:
+            return True
 
     def close(self, reconn = False):
         if self.socket != "":
