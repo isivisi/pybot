@@ -90,6 +90,7 @@ class irc:
         self.settings = settings
         self.linkgrabber = False
         self.parseSelf = False                                          # does pybot parse its own messages? for debugging
+        self.conCount = 0
 
         self.filters = []
         for i in settings.filters:
@@ -174,36 +175,38 @@ class irc:
         self.socket.send(msg.encode('utf-8'))
 
     def connect(self):
-        try:
-            self.socket = ""
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.socket.connect((self.server, self.port))
-            pybotPrint("[pybot.irc] Sending user info...", "log")
-            self.send("USER %s\r\n" % self.nick)
-            self.send("PASS %s\r\n" % self.password)
-            self.send("NICK %s\r\n" % self.nick)
-            self.send("TWITCHCLIENT 3\r\n")
-            #self.socket.send("CAP REQ :twitch.tv/membership") #request membership but disables chat for some reason
+        if (self.conCount < 1):
+            try:
+                self.socket = ""
+                self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.socket.connect((self.server, self.port))
+                pybotPrint("[pybot.irc] Sending user info...", "log")
+                self.send("USER %s\r\n" % self.nick)
+                self.send("PASS %s\r\n" % self.password)
+                self.send("NICK %s\r\n" % self.nick)
+                self.send("TWITCHCLIENT 3\r\n")
+                #self.socket.send("CAP REQ :twitch.tv/membership") #request membership but disables chat for some reason
 
-            if self.check_login_status(self.socket.recv(1024)):
-                pybotPrint("[pybot.irc] login success", "log")
-                self.msg("Pybot has connected to your chat.")
-            else:
-                pybotPrint("[pybot.irc] login failed", "log")
+                if self.check_login_status(self.socket.recv(1024)):
+                    pybotPrint("[pybot.irc] login success", "log")
+                    self.msg("Pybot has connected to your chat.")
+                else:
+                    pybotPrint("[pybot.irc] login failed", "log")
+                    self.retry()
+
+                pybotPrint("[pybot.irc] Joining channel " + self.channel, "log")
+                self.joinchannel(self.channel)
+
+                self.connected = True
+                self.ping_timeout = self.ping_timeout_max
+                self.closed = False
+                self.conCount += 1
+
+                self.getLoop()
+            except Exception as e:
+                pybotPrint(e, "log")
+                pybotPrint("[pybot.irc] connection failed, retrying...", "log")
                 self.retry()
-
-            pybotPrint("[pybot.irc] Joining channel " + self.channel, "log")
-            self.joinchannel(self.channel)
-
-            self.connected = True
-            self.ping_timeout = self.ping_timeout_max
-            self.closed = False
-
-            self.getLoop()
-        except Exception as e:
-            pybotPrint(e, "log")
-            pybotPrint("[pybot.irc] connection failed, retrying...", "log")
-            self.retry()
 
     def getMods(self):
         while 1:
@@ -241,16 +244,18 @@ class irc:
             self.send(text+"\r\n")
 
     def get(self):
-        try:
-            msg = self.socket.recv(2048)
-            msg = msg.decode("utf-8")
-            msg = msg.strip("\n\r")
-            return msg
-        except ConnectionAbortedError:
-            print("[pybot.irc.get] ConnectionAbortedError in get loop")
-        except Exception as e:
-            pybotPrint("[pybot.irc.get] " + e, "log")
-            return "ERROR"
+        if (self.connected):
+            try:
+                msg = self.socket.recv(2048)
+                msg = msg.decode("utf-8")
+                msg = msg.strip("\n\r")
+                return msg
+            except ConnectionAbortedError:
+                print("[pybot.irc.get] ConnectionAbortedError in get loop")
+            #except Exception as e:
+            #    pybotPrint("[pybot.irc.get] " + str(e), "log")
+            except:
+                return "ERROR"
 
     def getSetting(self, setting):
         value = self.mysql.query_r("SELECT %s FROM user WHERE userName = '%s'" % (setting, self.user))
@@ -459,6 +464,7 @@ class irc:
 
         self.socket = ""
         self.connected = False
+        self.conCount = 0
         if (reconn == False): self.closed = True
 
         print("[pybot.irc] Socket closed")
