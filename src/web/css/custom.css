@@ -46,6 +46,11 @@
     letter-spacing: .1rem;
 }
 
+.pyactive {
+    color: #fff;
+    background: #33C3F0;
+}
+
 .scrollbar {
     overflow-y: auto;
     height: 300px;

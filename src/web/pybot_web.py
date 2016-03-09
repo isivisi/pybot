@@ -70,8 +70,11 @@ class FilterHandler(tornado.web.RequestHandler):
         if len(split) >= 2:
             act = split[0]
             filter = split[1]
-            if act == "remove":
+            if act == "disable":
                 globals.settings.removeFilter(filter)
+                self.redirect("/hub/filters")
+            elif act == "enable":
+                globals.settings.addFilter(filter)
                 self.redirect("/hub/filters")
 
     def post(self, args):

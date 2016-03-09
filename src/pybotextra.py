@@ -1,5 +1,6 @@
 import globals
 import re
+import os
 
 def pybotPrint(text, mode=""):
     settings = globals.settings
@@ -48,3 +49,10 @@ def splitButNotQuotes(text):
             str = str + text[pos]
         pos += 1
     return split
+
+def allFilters():
+    if 'pybot\\src' in os.getcwd():
+        dir = 'filters/'
+    else:
+        dir = 'src/filters/'
+    return [f.replace('.py', '') for f in os.listdir(dir) if os.path.isfile(os.path.join(dir, f))]
