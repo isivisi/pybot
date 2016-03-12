@@ -21,7 +21,7 @@
             <div class="row u-full-width">
                 <div class="two columns u-full-width"></div>
                 <div class="six columns u-full-width"></div>
-                {% if filter in settings.filters %}
+                {% if filter in activeFilters %}
                     <div class="four columns pybutton u-pull-right"><a href="/filters/disable/{{ escape(filter) }}">Disable</a></div>
                 {% else %}
                     <div class="four columns pybutton pyactive u-pull-right"><a href="/filters/enable/{{ escape(filter) }}">Enable</a></div>
