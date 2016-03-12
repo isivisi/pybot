@@ -9,7 +9,7 @@ from pybotextra import *
 class Raffle:
     def __init__(self, conn, data, params):
         self.conn = conn
-        self.data = data
+        self.data = globals.data
         self.users = []
         self.params = {"name":"", "trigger":"!joinraffle", "cost":0, "minpoints":0}
         conn.addHook(self.hook)

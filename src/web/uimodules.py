@@ -1,6 +1,7 @@
 import tornado
 import globals
 from pybotextra import allFilters
+import json
 
 class Raffle(tornado.web.UIModule):
     def render(self):
@@ -20,5 +21,6 @@ class Links(tornado.web.UIModule):
 
 class Filters(tornado.web.UIModule):
     def render(self):
-        return self.render_string("templates/filtersmodule.html", data=globals.data, settings=globals.settings, allfilters=allFilters())
+        activeFilters = json.loads(globals.settings.config['filters']['activeFilters'])
+        return self.render_string("templates/filtersmodule.html", data=globals.data, activeFilters=activeFilters, allfilters=allFilters())
 

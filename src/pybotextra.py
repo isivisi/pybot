@@ -1,10 +1,11 @@
 import globals
+import data
 import re
 import os
 
 def pybotPrint(text, mode=""):
     settings = globals.settings
-    if (settings.HTML):
+    if (data.toBool(settings.config["print"]["HTML"])):
         print("<div class='pybot-out-" + mode + "'>" + text + "</div>")
     else:
         print(text)
