@@ -7,6 +7,8 @@ Pybot is an open source twitch chat bot.
 
 - [Python 3.5](https://www.python.org/downloads/release/python-351/)
 - [Tornado Web Framework](https://github.com/tornadoweb/tornado)
+- [Requests](https://github.com/kennethreitz/requests)
+- [Chart.js](https://github.com/nnnick/Chart.js/)
 - [Skeleton](https://github.com/dhg/Skeleton)
 
 ## Features

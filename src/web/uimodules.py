@@ -24,3 +24,14 @@ class Filters(tornado.web.UIModule):
         activeFilters = json.loads(globals.settings.config['filters']['activeFilters'])
         return self.render_string("templates/filtersmodule.html", data=globals.data, activeFilters=activeFilters, allfilters=allFilters())
 
+# Values take in a list of dictionaries with values (value: #, color:"#F7464A", highlight: "#FF5A5E", label: "")
+# settings is a dictionary with settings for the chart
+class Chart(tornado.web.UIModule):
+    def render(self, values = [], settings = {}):
+
+        # test values
+        values.append({"value" : "25", "color" : "#F7464A", "highlight" : "#FF5A5E", "label" : "test1"})
+        values.append({"value": "75", "color": "#ffffff", "highlight": "#FF5A5E", "label": "test2"})
+
+        return self.render_string("templates/chartmodule.html", values=values, settings=settings)
+

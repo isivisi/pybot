@@ -1,0 +1,62 @@
+<script src="{{ static_url("Chart.min.js") }}"></script>
+
+
+<div class="row">
+    <div class="twelve columns u-full-width">
+        <canvas id="chart" width="400" height="400"></canvas>
+    </div>
+</div>
+
+<script>
+    var ctx = document.getElementById("chart").getContext("2d");
+
+    var data = [
+    {% for value in values %}
+        {
+            value: {{ escape(value["value"]) }},
+            color: "{{ escape(value["color"]) }}",
+            highlight: "{{ escape(value["highlight"]) }}",
+            label: "{{ escape(value["label"]) }}"
+        },
+    {% end %}
+
+    // last value is none for now
+    {
+        value: 0,
+        color: "#ffffff",
+        highlight: "#ffffff",
+        label: ""
+    }] // close data
+
+    var chart = new Chart(ctx).Pie(data, {
+        //Boolean - Whether we should show a stroke on each segment
+        segmentShowStroke : true,
+
+        //String - The colour of each segment stroke
+        segmentStrokeColor : "#fff",
+
+        //Number - The width of each segment stroke
+        segmentStrokeWidth : 2,
+
+        //Number - The percentage of the chart that we cut out of the middle
+        percentageInnerCutout : 0, // This is 0 for Pie charts
+
+        //Number - Amount of animation steps
+        animationSteps : 100,
+
+        //String - Animation easing effect
+        animationEasing : "easeOutBounce",
+
+        //Boolean - Whether we animate the rotation of the Doughnut
+        animateRotate : true,
+
+        //Boolean - Whether we animate scaling the Doughnut from the centre
+        animateScale : false,
+
+        // any extra settings for the chart module
+        {% for setting in settings.keys() %}
+            {{ escape(setting + " : " + settings[setting]) }}
+        {% end %}
+
+    });
+</script>

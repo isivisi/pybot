@@ -69,3 +69,6 @@ persistent.data
 pybot.bat
 pybot_run.bat
 pybot
+*.js
+normalize.css
+skeleton.css
