@@ -10,6 +10,7 @@ import threading
 import time
 import urllib.request
 import traceback
+import globals
 
 from pybotextra import *
 
@@ -64,12 +65,12 @@ class chatters:
 
 # irc object
 class irc:
-    def __init__(self, settings, hook, data):
-        self.server = settings.HOST
-        self.port = settings.PORT
-        self.channel = "#"+settings.channel
-        self.user = settings.channel
-        self.nick = settings.NAME
+    def __init__(self, hook):
+        self.server = globals.settings.config['twitch']['HOST']
+        self.port = int(globals.settings.config['twitch']['PORT'])
+        self.channel = "#"+globals.settings.config['twitch']['channel']
+        self.user = globals.settings.config['twitch']['channel']
+        self.nick = globals.settings.config['bot']['NAME']
         self.hooks = [hook]
         self.connected = False
         self.socket = ""
@@ -78,7 +79,7 @@ class irc:
         self.chat_timeout_max = 60 										# minutes
         self.chat_check_mods = 30										# seconds
         self.chat_time = 0												# auto incremented dont change
-        self.password = settings.AUTH
+        self.password = globals.settings.config['bot']['AUTH']
         self.totalUsers = 0
         self.users = {}
         self.filterDb = {}  											# if filters need persistent data. list of all created dictionaries
@@ -87,13 +88,12 @@ class irc:
         self.botIsMod = False
         self.closed = False
         self.chatters = chatters(self.user, self, self.data)
-        self.settings = settings
         self.linkgrabber = False
         self.parseSelf = False                                          # does pybot parse its own messages? for debugging
         self.conCount = 0
 
         self.filters = []
-        for i in settings.filters:
+        for i in json.loads(globals.settings.config['filters']['activeFilters']):
             self.filters.append(i+".py")
 
         filterList = ""
@@ -356,26 +356,26 @@ class irc:
             self.retry()
 
     def isLinkBanned(self, name):
-        if name in self.data.linkbanned:
+        if name in globals.data.linkbanned:
             return True
         else:
             return False
 
     def linkBan(self, name):
-        if name not in self.data.linkbanned:
-            self.data.linkbanned.append(name)
-            self.data.save()
+        if name not in globals.data.linkbanned:
+            globals.data.linkbanned.append(name)
+            globals.data.save()
         else:
-            self.data.linkbanned.remove(name)
-            self.data.save()
+            globals.data.linkbanned.remove(name)
+            globals.data.save()
 
     def addQuote(self, name, text):
-        self.data.quotes.append('"' + text + '" - ' + name)
-        self.data.save()
+        globals.data.quotes.append('"' + text + '" - ' + name)
+        globals.data.save()
 
     def getRandomQuote(self):
-        if (len(self.data.quotes) > 0):
-            return self.data.quotes[random.randint(0, len(self.data.quotes)-1)]
+        if (len(globals.data.quotes) > 0):
+            return globals.data.quotes[random.randint(0, len(self.data.quotes)-1)]
         return False
 
     def linkgrab(self, msg):
@@ -387,8 +387,8 @@ class irc:
             for filter in filters:
                 if filter in text.lower():
                     #self.mysql.query("INSERT INTO link values (null, '%s', '%s', '%s')" % (self.channel, text, name))
-                    self.data.links[name] = text
-                    self.data.save()
+                    globals.data.links[name] = text
+                    globals.data.save()
                     self.msg(name + ", your link has been grabbed.")
                     break
 

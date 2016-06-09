@@ -150,10 +150,10 @@ class pybot_web():
         self.settings = globals.settings
 
     def startWebService(self):
-        print("[pybot.tornado.web] Web services starting on port " + str(self.settings.webport))
+        print("[pybot.tornado.web] Web services starting on port " + str(globals.settings.config['web']['port']))
 
         app = make_app()
-        app.listen(self.settings.webport)
+        app.listen(int(globals.settings.config['web']['port']))
         tornado.ioloop.IOLoop.current().start()
 
 # for testing directly

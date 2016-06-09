@@ -4,6 +4,7 @@
 
 import sys
 import threading
+import json
 
 import os
 from data import *
@@ -34,17 +35,17 @@ def main():
 
     pybotPrint("PYBOT %s VERSION %s BUILD %s" % (PYBOT_VERSION["status"], PYBOT_VERSION["version"], PYBOT_VERSION["build"]), "usermsg")
 
-    if (len(settings.filters) <= 0):
+    if len(json.loads(settings.config['filters']['activeFilters'])) <= 0:
         pybotPrint("[pybot.main] Running with no filters", "log")
 
     # create the irc connection and set the hook for the incoming feed
-    con = irc(settings, feed, data)
+    con = irc(feed)
     globals.con = con
 
     # connect separate features to the connection
     cmds = Commands(con)
 
-    if (settings.points):
+    if (toBool(settings.config['points']['enabled'])):
         points = Points(con, con.chatters, settings, data)
 
     # start connection in new thread
@@ -52,7 +53,7 @@ def main():
     threading.Thread(target=con.connect).start()
 
     # start web services
-    if (settings.web):
+    if (toBool(settings.config['web']['enabled'])):
         web = pybot_web.pybot_web(con)
         threading.Thread(target=web.startWebService).start()
     while con.isClosed() == False:
@@ -99,10 +100,10 @@ def feed(con, msg, event):
             con.filter(name, text)
 
         if checkIfCommand(text, "!raffle"):
-            if con.settings.raffle:
+            if toBool(globals.settings.config['features']['raffle']):
                 texsplit = text.replace("!raffle", '').split(" ")
                 raffle = Raffle(con, con.data, texsplit)
-                con.data.raffles.append(raffle)
+                globals.data.raffles.append(raffle)
 
         elif checkIfCommand(text, "!leave"):
             if con.isMod(name):
@@ -134,14 +135,14 @@ def feed(con, msg, event):
                     con.linkgrabber = False
                     con.msg("Link grabber has been disabled!")
                 else:
-                    if con.settings.linkgrabber:
+                    if toBool(globals.settings.config['features']['linkgrabber']):
                         con.linkgrabber = True
                         con.msg("Link grabber has been enabled! post your links!")
             else:
                 con.msg('%s, you do not have access to this command.' % name)
 
         elif checkIfCommand(text, "!quote"):
-            if con.settings.quotes:
+            if toBool(globals.settings.config['features']['quotes']):
                 quote = text.split("quote", 1)
                 if (len(quote) > 1 and quote[1] != ''):
                     print(quote)

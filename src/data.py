@@ -15,46 +15,17 @@ class Settings(Singleton):
             else:
                 self.createConf()
                 self.config = self.getConf()
-            self.setVars(self.config)
-
-        def setVars(self, config):
-            self.config = config
-
-            # name and auth for the user that the bot will speak from
-            self.NAME = config['bot']['NAME']
-            self.AUTH = config['bot']['AUTH']
-
-            # twitch settings
-            self.HOST = config['twitch']['HOST']
-            self.PORT = int(config['twitch']['PORT'])
-            self.channel = config['twitch']['channel']
-
-            # filters
-            self.filters = json.loads(config['filters']['activeFilters'])
-
-            # features
-            self.linkgrabber = toBool(config['features']['linkgrabber'])
-            self.quotes = toBool(config['features']['quotes'])
-            self.raffle = toBool(config['features']['raffle'])
-
-            self.points = toBool(config['points']['enabled'])
-            self.pointsToAppend = int(config['points']['points_to_append'])
-            self.pointsInterval = float(config['points']['interval_in_minutes'])
-
-            self.web = toBool(config['web']['enabled'])
-            self.webport = int(config['web']['port'])
-
-            # printing settings
-            self.HTML = toBool(config['print']['html'])
 
         def addFilter(self, filter):
-            self.filters.append(filter)
-            self.config['filters']['activeFilters'] = json.dumps(self.filters)
+            filters = json.loads(self.config['filters']['activeFilters'])
+            filters.append(filter)
+            self.config['filters']['activeFilters'] = json.dumps(filters)
             self.saveConf()
 
         def removeFilter(self, filter):
-            self.filters.remove(filter)
-            self.config['filters']['activeFilters'] = json.dumps(self.filters)
+            filters = json.loads(self.config['filters']['activeFilters'])
+            filters.remove(filter)
+            self.config['filters']['activeFilters'] = json.dumps(filters)
             self.saveConf()
 
         def createConf(self):
@@ -82,7 +53,7 @@ class Settings(Singleton):
                 conf = self.config
             with open('pybot.conf', 'w') as configfile:
                 conf.write(configfile)
-            self.setVars(conf)
+            self.config = conf
 
 class Data(Singleton):
     def __init__(self):

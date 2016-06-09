@@ -15,7 +15,10 @@ else:
 
 pyLoc = sys.executable
 
-dependencies = {"tornado":"tornado>=4.3"}
+dependencies = {"tornado":"tornado>=4.3", "requests":"requests>=2.9.1"}
+get = { "https://raw.githubusercontent.com/nnnick/Chart.js/master/Chart.min.js":"src\\web\\Chart.min.js",
+        "https://raw.githubusercontent.com/dhg/Skeleton/master/css/normalize.css":"src\\web\\css\\normalize.css",
+        "https://raw.githubusercontent.com/dhg/Skeleton/master/css/skeleton.css":"src\\web\\css\\skeleton.css" }
 
 def main():
 
@@ -29,6 +32,8 @@ def main():
             print("Pybot is setting up...")
 
             print("[Setup] Installing dependencies...")
+
+            print("Installing pip modules...")
             for package in dependencies.keys():
                 try:
                     __import__(package)
@@ -36,6 +41,20 @@ def main():
                 except:
                     pip.main(['install', dependencies[package]])
                     print("[Setup] " + package + " installed")
+
+            print("Grabbing extra files...")
+            import requests
+            for file in get.keys():
+                loc = get[file]
+                if not os.path.isfile(loc):
+                    print("Grabbing: " + file)
+                    txt = requests.get(file)
+                    if (loc != ""):
+                        f = open(loc, 'w')
+                        f.write(txt.text)
+                        f.close()
+                else:
+                    print(loc + " Already exists.")
 
             # this create default config
             Settings()

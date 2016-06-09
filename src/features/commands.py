@@ -2,6 +2,7 @@
 
 import os
 from pybotextra import *
+import globals
 
 PWD = "/var/www/html/pybot"
 
@@ -28,7 +29,6 @@ class Commands:
     def __init__(self, con):
         self.commands = []
         self.con = con
-        self.data = con.data
 
         self.getCommands()
         con.addHook(self.hook)
@@ -36,7 +36,7 @@ class Commands:
     #def checkForCustomCommand
 
     def getCommands(self):
-        commands = self.data.commands
+        commands = globals.data.commands
         for command in commands:
             split = command.split(',')
             self.commands.append(Command(split[0], split[1], split[2], split[3]))
@@ -44,14 +44,14 @@ class Commands:
 
     def addCommand(self, trigger, args, message, permissions):
         cmd = Command(trigger, args, message, permissions)
-        self.data.commands.append(str(cmd))
-        self.data.save()
+        globals.data.commands.append(str(cmd))
+        globals.data.save()
         self.commands.append(cmd)
 
     def removeCommand(self, cmd):
         self.commands.remove(cmd)
-        self.data.commands.remove(str(cmd))
-        self.data.save()
+        globals.data.commands.remove(str(cmd))
+        globals.data.save()
 
     def commandExists(self, trigger):
         for cmd in self.commands:
