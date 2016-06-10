@@ -2,6 +2,8 @@
 
 Pybot is an open source twitch chat bot.
 
+![image](http://i.imgur.com/KK87zjt.png "Pybot settings")
+
 ### Dependencies
 `python pybot.py -setup` will take care of any missing depencencies.
 
