@@ -15,7 +15,7 @@ Pybot is an open source twitch chat bot.
 
 ## Features
 
-- Web interface
+- Web interface `mobile friendly`
 - Moderator control
 - Custom commands
 - Chat Filters
