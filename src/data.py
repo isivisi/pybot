@@ -39,6 +39,7 @@ class Settings(Singleton):
             config['compatibility'] = {'append_to_commands':''}
             config['web'] = {'enabled':'True', 'port':'8888'}
             config['print'] = {'HTML':'False'}
+            config['linkgrabber'] = {'filter':''}
 
             with open('pybot.conf', 'w') as configfile:
                 config.write(configfile)
@@ -72,6 +73,9 @@ class Data(Singleton):
         self.commands = []
 
         self.read()
+
+        # session data
+        self.currentRandomLink = ""
 
     def getRaffle(self, name):
         raffle = False

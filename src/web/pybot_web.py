@@ -94,9 +94,9 @@ class LinkHandler(tornado.web.RequestHandler):
                 self.redirect("/hub/links")
             elif act == "random":
                 if len(data.links) > 0:
-                    self.render("templates/link.html", message=data.links[random.sample(list(data.links), 1)[0]])
-                else:
-                    self.redirect("/hub/links")
+                    #self.render("templates/link.html", message=data.links[random.sample(list(data.links), 1)[0]])
+                    globals.data.currentRandomLink = data.links[random.sample(list(data.links), 1)[0]]
+                self.redirect("/hub/links")
             elif act == "removeall":
                 data.links.clear()
                 self.redirect("/hub/links")
@@ -121,6 +121,13 @@ class HubHandler(tornado.web.RequestHandler):
             settings.saveConf(config)
 
             self.render("templates/hub.html", data=data, settings=settings, page=page)
+
+        if page == "links":
+            inputFilter = self.get_argument('inputFilter', '')
+            if inputFilter:
+                settings.config['linkgrabber']['filter'] = inputFilter
+                settings.saveConf()
+            self.redirect('/hub/links')
 
 class SettingsHandler(tornado.web.RequestHandler):
     def get(self):
