@@ -17,7 +17,7 @@ class Logs(tornado.web.UIModule):
 
 class Links(tornado.web.UIModule):
     def render(self, link = False):
-        return self.render_string("templates/linksmodule.html", data=globals.data, link=link)
+        return self.render_string("templates/linksmodule.html", settings = globals.settings, data=globals.data, link=link)
 
 class Filters(tornado.web.UIModule):
     def render(self):

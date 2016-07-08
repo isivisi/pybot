@@ -381,15 +381,18 @@ class irc:
     def linkgrab(self, msg):
         name = msg.replace(':', '').split('!')[0].replace('\n\r', '')
         text = msg.split("PRIVMSG")[1].replace('%s :' % self.channel, '')
+
+        # todo replace with REGEX!!!!!
         filters = ['http://', 'www.', '.com', '.ca', '.org', '.gov', '.on', '.tk']
 
         if self.isLinkBanned(name) == False:
             for filter in filters:
                 if filter in text.lower():
                     #self.mysql.query("INSERT INTO link values (null, '%s', '%s', '%s')" % (self.channel, text, name))
-                    globals.data.links[name] = text
-                    globals.data.save()
-                    self.msg(name + ", your link has been grabbed.")
+                    if (globals.settings.config['linkgrabber']['filter'] in text):
+                        globals.data.links[name] = text
+                        globals.data.save()
+                        self.msg(name + ", your link has been grabbed.")
                     break
 
     def getPrivMsgName(self, text):
