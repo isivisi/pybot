@@ -17,12 +17,12 @@ class Points:
 
     def pointsCheck(self):
         if globals.data.points:
-            time.sleep(60 * globals.settings.pointsInterval)
+            time.sleep(60 * float(globals.settings.config['points']['interval_in_minutes']))
             for user in self.chatters.mods:
-                globals.data.addPoints(user, self.settings.pointsToAppend)
+                globals.data.addPoints(user, float(globals.settings.config['points']['points_to_append']))
 
             for user in self.chatters.viewers:
-                globals.data.addPoints(user, self.settings.pointsToAppend)
+                globals.data.addPoints(user, float(globals.settings.config['points']['points_to_append']))
             globals.data.save()
             self.pointsCheck()
 
