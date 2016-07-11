@@ -21,8 +21,8 @@ import globals
 PYBOT_VERSION = {"status": "BETA", "version": 0, "build": 121}
 
 PWD = os.getcwd()
-if ("pybot\\src" in PWD):
-    os.chdir(PWD.replace("\\pybot\\src", "\\pybot"))
+if ("\\src" in PWD):
+    os.chdir(PWD.replace("\\src", "\\"))
     PWD = os.getcwd()
 
 def main():

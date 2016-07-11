@@ -1,5 +1,7 @@
  <h4>Grabbed Links</h4>
 
+    {% set maxLength = 50 %}
+
     {% if link != False %}
         <h5>Random Link</h5>
         <p>{{ escape(link) }}</p>
@@ -27,15 +29,15 @@
                 <td>{{ escape(name) }}</td>
                 <td>
                     {% if "http://" not in data.currentRandomLink %}
-                        <a href="http://{{escape(data.currentRandomLink.replace(' ', '')) }}">{{ escape(data.currentRandomLink) }}</a>
+                        <a href="http://{{escape(data.currentRandomLink.replace(' ', '')) }}">{{ escape(data.currentRandomLink[:maxLength]) }}</a>
                     {% else %}
-                        <a href="{{ escape(data.currentRandomLink) }}">{{ escape(data.currentRandomLink) }}</a>
+                        <a href="{{ escape(data.currentRandomLink) }}">{{ escape(data.currentRandomLink[:maxLength]) }}</a>
                     {% end %}
                 </td>
                 <td>
                     <div class="row u-full-width">
-                        <div class="two columns u-full-width"></div>
-                        <div class="six columns pybutton u-pull-right"><a href="/links/remove/{{ escape(name) }}">Remove</a></div>
+
+                        <div class="twelve columns pybutton u-pull-right"><a href="/links/remove/{{ escape(name) }}">Remove</a></div>
                      </div>
                 </td>
             </tr>
@@ -60,15 +62,14 @@
             </td>
             <td>
                 {% if "http://" not in data.links[u] %}
-                    <a href="http://{{escape(data.links[u].replace(' ', '')) }}">{{ escape(data.links[u]) }}</a>
+                    <a href="http://{{escape(data.links[u].replace(' ', '')) }}">{{ escape(data.links[u][:maxLength]) }}</a>
                 {% else %}
-                    <a href="{{ escape(data.links[u]) }}">{{ escape(data.links[u]) }}</a>
+                    <a href="{{ escape(data.links[u]) }}">{{ escape(data.links[u][:maxLength]) }}</a>
                 {% end %}
             </td>
             <td>
                 <div class="row u-full-width">
-                    <div class="two columns u-full-width"></div>
-                    <div class="six columns pybutton u-pull-right"><a href="/links/remove/{{ escape(u) }}">Remove</a></div>
+                    <div class="twelve columns pybutton u-pull-right"><a href="/links/remove/{{ escape(u) }}">Remove</a></div>
                 </div>
             </td>
         </tr>
