@@ -28,6 +28,9 @@ def main():
             print ("Starting main pybot process...")
             subprocess.call([pyLoc, mainLoc], cwd=os.getcwd())
 
+        elif sys.argv[1] == "-tests":
+            print("TODO TESTS ;D")
+
         elif sys.argv[1] == "-setup":
             print("Pybot is setting up...")
 
