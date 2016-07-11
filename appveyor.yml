@@ -1,0 +1,13 @@
+build: false
+
+environment:
+  matrix:
+    - PYTHON: "C:/Python35"
+init:
+  - "ECHO %PYTHON%"
+  - ps: "ls C:/Python*"		  
+install:
+  - "%PYTHON%/python.exe -V"
+  - "%PYTHON%/python.exe src/pybot.py -setup"
+test_script:
+  - "%PYTHON%/python.exe src/pybot.py -tests"
