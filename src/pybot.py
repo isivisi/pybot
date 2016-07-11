@@ -9,9 +9,9 @@ from data import *
 import pip
 
 if ("\\pybot\\src" in os.getcwd()):
-    mainLoc = os.getcwd()+"\\pybot_main.py"
+    mainLoc = os.getcwd()
 else:
-    mainLoc = os.getcwd()+"\\src\\pybot_main.py"
+    mainLoc = os.path.join(os.getcwd(), "src")
 
 pyLoc = sys.executable
 
@@ -26,10 +26,10 @@ def main():
 
         if sys.argv[1] == "-run":
             print ("Starting main pybot process...")
-            subprocess.call([pyLoc, mainLoc], cwd=os.getcwd())
+            subprocess.call([pyLoc, os.path.join(mainLoc, "pybot_main.py")], cwd=os.getcwd())
 
         elif sys.argv[1] == "-tests":
-            print("TODO TESTS ;D")
+            subprocess.call([pyLoc, os.path.join(mainLoc, "tests.py")], cwd=os.getcwd())
 
         elif sys.argv[1] == "-setup":
             print("Pybot is setting up...")
