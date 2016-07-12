@@ -19,7 +19,7 @@ def pysetup():
     try:
         __import__("requests")
     except:
-        pip.main(['install', "requests"])
+        pip.main(['install', "requests", "--quiet"])
 
     print("Grabbing extra files...")
     import requests
@@ -64,7 +64,7 @@ setup(
                          "web/templates/*"]
     },
     include_package_data=True,
-    version='0.1.0',
+    version='0.1.1',
     packages=['pybot', "pybot/web", "pybot/globals", "pybot/filters", "pybot/features", "pybot/data", "pybot/tests"],
     zip_safe=False,
     license='GNU',
