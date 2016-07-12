@@ -64,7 +64,7 @@ setup(
                          "web/templates/*"]
     },
     include_package_data=True,
-    version='0.1.1',
+    version='0.1.2',
     packages=['pybot', "pybot/web", "pybot/globals", "pybot/filters", "pybot/features", "pybot/data", "pybot/tests"],
     zip_safe=False,
     license='GNU',

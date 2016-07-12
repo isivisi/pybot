@@ -21,3 +21,14 @@ install:
 script: 
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then python setup.py test ;fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then python3 setup.py test ;fi
+
+deploy:
+  provider: pypi
+  user: isivisi
+  distributions: sdist
+  skip_cleanup: true
+  password:
+    secure: fszUmtn1lH6Azylp7Yo6WAnqBa2gUsjJMfFIRUYCqhxzHpalWYAKKti4M0a0C+DDXtDTd8j9v3uPUacbv+rvb325Nobtr4KR6yQT7wgbK0/ajtJ54YntfBD9npy+BN+twPYyn69SjP/3c+Q2efTTJE4OQByj78tcd05c5SXv5gqhz/ZJ2aqvDTWOQwSntAGtTgY3qTlmt54OgXsQZgQKswaBcxgiTdd3lsjMBPz4nF/r0bujSP9s98O6osNS1Ft9QG6sXYsrfGyEGpsnuFkQsMERfTfeSfNjgNXFQL5JUi+31ObO3VFdKILxD3kbehhzwQlf0vtYQ7us62h+mxpvq9XzgpKK2ndikgBlM+DfCck6ceeheKp51Ds23uplld+6EIV857EyLB3KDoLu0qfR7FyevrmS1cd7hDB5MNhGL9GyyKmJX4dOj5eKWqSs9flMbr/gPimb9bp/XoUIvfN1plmWBhbwfpsvYZChQYW/lsfqAQIoJJ3NN6prHh1qr1JNrMgrIijx0RBz0hWNVpPBEjZ1m9vEQSyoKW9QOFno4taZzqASr3uWw0Ih59Ed5atPd6EUDZ62QSxP49CaZl4X3rv+DjHXT7jnPNWI4E/HM+woHkwmYe/vYGPZKi4/DXpi4bDDk6c5iGlrqW1/GDeNncngxVO6M46obfKo5Jcpa5M=
+  on:
+    branch: master
+    tags: true

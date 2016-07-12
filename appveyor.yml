@@ -1,6 +1,8 @@
 build: false
 
 environment:
+  password:
+    secure: tVEo9hO+zCszMNMOHP93cA==
   matrix:
     - PYTHON: "C:/Python35"
 init:
@@ -11,3 +13,12 @@ install:
   - "%PYTHON%/python.exe setup.py build install"
 test_script:
   - "%PYTHON%/python.exe setup.py test"
+
+on_success:
+  - "set HOME=%USERPROFILE%"
+  - "echo [pypirc] > %USERPROFILE%\\.pypirc"
+  - "echo servers = pypi >> %USERPROFILE%\\.pypirc"
+  - "echo [server-login] >> %USERPROFILE%\\.pypirc"
+  - "echo username: isivisi >> %USERPROFILE%\\.pypirc"
+  - "echo password: %password% >> %USERPROFILE%\\.pypirc"
+  - "if %APPVEYOR_REPO_TAG% == true ( %PYTHON%/python.exe setup.py build sdist upload ) else ( echo 'not deploying' )"
