@@ -1,6 +1,7 @@
 # [Pybot](http://pybot.ca)
 [![Build Status](https://travis-ci.org/isivisi/pybot.svg?branch=master)](https://travis-ci.org/isivisi/pybot)
 [![Build status](https://ci.appveyor.com/api/projects/status/e4ibsuh5m2behfx5/branch/master?svg=true)](https://ci.appveyor.com/project/isivisi/pybot/branch/master)
+[![pip](https://img.shields.io/pypi/v/Twitch_Pybot.svg)](https://img.shields.io/pypi/Twitch_Pybot)
 
 Pybot is an open source twitch chat bot.
 
