@@ -32,13 +32,18 @@ View full installation guide [here](https://github.com/isivisi/pybot/wiki/Instal
 
 - Install via pip 
  - `pip install twitch-pybot`
-- Or pull repo and run the install script
-- Configure your bot:
+- Or pull repo and run
+ - `python setup.py build install` 
+ - or for development `python setup.py develop`
+- Configure your bot via the web interface:
+ - `pybot -run`
+ - then go to `127.0.0.1:8888` in your browser
+- or use the command line:
  - `pybot --config bot.name botusername`
  - `pybot --config bot.auth oauth:botauthentication`
  - `pybot --config twitch.channel channeltomoderate`
 - You can view the full configure proccess [here](https://github.com/isivisi/pybot/wiki/Config)
-- Now you can start pybot with `pybot -run` or use `pybot_run.bat`
+- Now you can start pybot with `pybot -run`
 
 If you're running multiple bots you may want to set the compatibility setting to change all the command names. This adds a p to the beginning of every command so multiple bot commands dont clash. ex: `!quote` would now be `!pquote`
 - `pybot --config compatibility.append_to_commands p` 
