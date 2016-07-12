@@ -1,8 +1,8 @@
 # controller for pybot commands
 
 import os
-from pybotextra import *
-import globals
+from pybot.pybotextra import *
+import pybot.globals as globals
 
 PWD = "/var/www/html/pybot"
 

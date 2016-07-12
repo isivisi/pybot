@@ -3,29 +3,15 @@
 import py_compile
 import os
 
-src = ""
-if ("\\pybot\\src" in os.getcwd()):
-    src = os.getcwd()
-else:
-    src = os.path.join(os.getcwd(), "src")
+os.chdir(os.path.dirname(__file__) or '.')
+os.chdir('..') # move one back
+src = os.getcwd()
+print(src)
 
 currentTest = 0
 def startTest():
     global currentTest
     currentTest += 1
-
-def main():
-    global currentTest
-    try:
-        # Compile code to make sure its syntactically correct
-        print("[PYBOT TESTS]\n")
-        print("[TEST 1] SIMPLE SYNTAX TEST")
-        compileTest()
-        print("[TEST 2] SETUP CHECK")
-        setupTest()
-    except AssertionError as e:
-        print("[TEST %s] ASSERTION FAILED: %s" % (currentTest, str(e),))
-        exit(1)
 
 def getPyFilesFromDir(dir = ""):
     loc = os.path.join(src, dir)
@@ -61,5 +47,14 @@ def setupTest():
     print("looking for skeleton.css...")
     assert (os.path.isfile(os.path.join(src, "web", "css", "skeleton.css")) == True), "skeleton.css not found!"
 
-if __name__ == "__main__":
-    main()
+
+try:
+    # Compile code to make sure its syntactically correct
+    print("[PYBOT TESTS]\n")
+    print("[TEST 1] SIMPLE SYNTAX TEST")
+    compileTest()
+    print("[TEST 2] SETUP CHECK")
+    setupTest()
+except AssertionError as e:
+    print("[TEST %s] ASSERTION FAILED: %s" % (currentTest, str(e),))
+    exit(1)

@@ -1,6 +1,6 @@
 import tornado
-import globals
-from pybotextra import allFilters
+import pybot.globals as globals
+from pybot.pybotextra import allFilters
 import json
 
 class Raffle(tornado.web.UIModule):

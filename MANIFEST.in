@@ -1,0 +1,4 @@
+include pybot/web/Chart.min.js
+include pybot/web/css/*
+include pybot/web/images/*
+include pybot/web/templates/*

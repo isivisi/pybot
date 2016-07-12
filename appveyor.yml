@@ -5,9 +5,9 @@ environment:
     - PYTHON: "C:/Python35"
 init:
   - "ECHO %PYTHON%"
-  - ps: "ls C:/Python*"		  
+  - ps: "ls C:/Python*"
 install:
   - "%PYTHON%/python.exe -V"
-  - "%PYTHON%/python.exe src/pybot.py -setup"
+  - "%PYTHON%/python.exe setup.py build install"
 test_script:
-  - "%PYTHON%/python.exe src/tests.py"
+  - "%PYTHON%/python.exe setup.py test"

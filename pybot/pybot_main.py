@@ -2,37 +2,32 @@
 # Pybot twitch irc bot
 # Pybot is designed to monitor and admin your twitch chat
 
+
+
 import sys
 import threading
 import json
 
 import os
-from data import *
-from irc import irc # yea its dumb
-from pybotextra import *
-from features.raffle import Raffle
-from features.commands import Commands
-from features.points import Points
-from web import pybot_web
 
-import globals
+os.chdir(os.path.dirname(__file__) or '.')
+
+from pybot.data import *
+from pybot.irc import irc # yea its dumb
+from pybot.pybotextra import *
+from pybot.features.raffle import Raffle
+from pybot.features.commands import Commands
+from pybot.features.points import Points
+from pybot.web import pybot_web
+import pybot.globals as globals
 
 # VERSION INFO
 PYBOT_VERSION = {"status": "BETA", "version": 0, "build": 121}
 
 PWD = os.getcwd()
-if ("\\src" in PWD):
-    os.chdir(PWD.replace("\\src", "\\"))
-    PWD = os.getcwd()
 
 def main():
-    # global data
-    settings = Settings.instance()
-    data = Data.instance()
-
-    globals.settings = settings
-    globals.data = data
-
+    settings = globals.settings
     pybotPrint("PYBOT %s VERSION %s BUILD %s" % (PYBOT_VERSION["status"], PYBOT_VERSION["version"], PYBOT_VERSION["build"]), "usermsg")
 
     if len(json.loads(settings.config['filters']['activeFilters'])) <= 0:
