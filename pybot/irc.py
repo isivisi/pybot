@@ -10,9 +10,9 @@ import threading
 import time
 import urllib.request
 import traceback
-import globals
+import pybot.globals as globals
 
-from pybotextra import *
+from pybot.pybotextra import *
 
 PWD = os.getcwd()
 

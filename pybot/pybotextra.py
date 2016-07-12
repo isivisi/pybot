@@ -1,5 +1,5 @@
-import globals
-import data
+import pybot.globals as globals
+import pybot.data as data
 import re
 import os
 
@@ -52,8 +52,5 @@ def splitButNotQuotes(text):
     return split
 
 def allFilters():
-    if 'pybot\\src' in os.getcwd():
-        dir = 'filters/'
-    else:
-        dir = 'src/filters/'
+    dir = 'filters/'
     return [f.replace('.py', '') for f in os.listdir(dir) if os.path.isfile(os.path.join(dir, f))]

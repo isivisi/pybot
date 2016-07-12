@@ -68,7 +68,13 @@ userlogs/*
 persistent.data
 pybot.bat
 pybot_run.bat
-pybot
 *.js
 normalize.css
 skeleton.css
+
+# Setuptools distribution folder.
+*/dist/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+/*.egg

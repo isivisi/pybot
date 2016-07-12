@@ -5,10 +5,11 @@ import tornado.web
 import tornado.websocket
 import tornado.escape
 import os
-import web.uimodules
+import pybot.web.uimodules as uimodules
 import random
-from data import *
-import globals
+from pybot.data import *
+import pybot.globals as globals
+import threading
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -137,7 +138,7 @@ def make_app():
 
     settings = {
         "static_path": os.path.dirname(__file__),
-        "ui_modules": web.uimodules
+        "ui_modules": uimodules
     }
 
     return tornado.web.Application([

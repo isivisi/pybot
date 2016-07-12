@@ -30,8 +30,9 @@ Pybot is an open source twitch chat bot.
 ## Installation
 View full installation guide [here](https://github.com/isivisi/pybot/wiki/Installation-guide-(windows))
 
-- pull repo
-- Run `setup_win.bat`
+- Install via pip 
+ - `pip install twitch-pybot`
+- Or pull repo and run the install script
 - Configure your bot:
  - `pybot --config bot.name botusername`
  - `pybot --config bot.auth oauth:botauthentication`

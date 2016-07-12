@@ -3,12 +3,11 @@
 import configparser
 import os
 import json
-from Singleton import *
 
 def toBool(str):
     return str == "True" or str == "true"
 
-class Settings(Singleton):
+class Settings():
         def __init__(self):
             if (os.path.isfile("pybot.conf")):
                 self.config = self.getConf()
@@ -56,7 +55,7 @@ class Settings(Singleton):
                 conf.write(configfile)
             self.config = conf
 
-class Data(Singleton):
+class Data():
     def __init__(self):
 
         # live non saved data
