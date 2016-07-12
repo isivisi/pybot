@@ -19,5 +19,5 @@ install:
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then python3 src/pybot.py -setup ;fi
 
 script: 
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then python src/pybot.py -tests ;fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then python3 src/pybot.py -tests ;fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then python src/tests.py ;fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then python3 src/tests.py ;fi
