@@ -10,9 +10,9 @@ import os
 #if os.name == "nt":
 #    scripts += ["bin/pybot.bat"]
 
-get = {"https://raw.githubusercontent.com/nnnick/Chart.js/master/Chart.min.js": "pybot\\web\\Chart.min.js",
-       "https://raw.githubusercontent.com/dhg/Skeleton/master/css/normalize.css": "pybot\\web\\css\\normalize.css",
-       "https://raw.githubusercontent.com/dhg/Skeleton/master/css/skeleton.css": "pybot\\web\\css\\skeleton.css"}
+get = {"https://raw.githubusercontent.com/nnnick/Chart.js/master/Chart.min.js": "pybot//web//Chart.min.js",
+       "https://raw.githubusercontent.com/dhg/Skeleton/master/css/normalize.css": "pybot//web//css//normalize.css",
+       "https://raw.githubusercontent.com/dhg/Skeleton/master/css/skeleton.css": "pybot//web//css//skeleton.css"}
 
 def pysetup():
     print("Pybot is setting up...")
