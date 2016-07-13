@@ -88,7 +88,6 @@ class irc:
         self.botIsMod = False
         self.closed = False
         self.chatters = chatters(self.user, self, self.data)
-        self.linkgrabber = False
         self.parseSelf = False                                          # does pybot parse its own messages? for debugging
         self.conCount = 0
 
@@ -327,8 +326,6 @@ class irc:
                     else:
                         if ("jtv.tmi.twitch.tv PRIVMSG " + self.channel not in msg):
                             ev = "user_privmsg"
-                            if (self.linkgrabber == True):
-                                self.linkgrab(msg)
 
                             self.chat_time = 0 							  	# set timeout time to 0 so bot doesn't leave when there is activity
                         else:
@@ -354,46 +351,6 @@ class irc:
         except:
             traceback.print_exc()
             self.retry()
-
-    def isLinkBanned(self, name):
-        if name in globals.data.linkbanned:
-            return True
-        else:
-            return False
-
-    def linkBan(self, name):
-        if name not in globals.data.linkbanned:
-            globals.data.linkbanned.append(name)
-            globals.data.save()
-        else:
-            globals.data.linkbanned.remove(name)
-            globals.data.save()
-
-    def addQuote(self, name, text):
-        globals.data.quotes.append('"' + text + '" - ' + name)
-        globals.data.save()
-
-    def getRandomQuote(self):
-        if (len(globals.data.quotes) > 0):
-            return globals.data.quotes[random.randint(0, len(self.data.quotes)-1)]
-        return False
-
-    def linkgrab(self, msg):
-        name = msg.replace(':', '').split('!')[0].replace('\n\r', '')
-        text = msg.split("PRIVMSG")[1].replace('%s :' % self.channel, '')
-
-        # todo replace with REGEX!!!!!
-        filters = ['http://', 'www.', '.com', '.ca', '.org', '.gov', '.on', '.tk']
-
-        if self.isLinkBanned(name) == False:
-            for filter in filters:
-                if filter in text.lower():
-                    #self.mysql.query("INSERT INTO link values (null, '%s', '%s', '%s')" % (self.channel, text, name))
-                    if (globals.settings.config['linkgrabber']['filter'] in text):
-                        globals.data.links[name] = text
-                        globals.data.save()
-                        self.msg(name + ", your link has been grabbed.")
-                    break
 
     def getPrivMsgName(self, text):
         return text.replace(':', '').split('!')[0]
