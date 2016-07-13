@@ -3,6 +3,7 @@ import pybot.globals as globals
 import random
 from pybot.data import *
 
+
 class Quotes():
     def __init__(self, conn):
         self.conn = conn

@@ -3,6 +3,7 @@ import pybot.data as data
 import re
 import os
 
+
 def pybotPrint(text, mode=""):
     settings = globals.settings
     if (data.toBool(settings.config["print"]["HTML"])):
@@ -10,6 +11,7 @@ def pybotPrint(text, mode=""):
     else:
         print(text)
         globals.data.logs.append(text)
+
 
 def checkIfCommand(text, *cmds_, addc=True):
     found = False
@@ -32,6 +34,7 @@ def checkIfCommand(text, *cmds_, addc=True):
 
     return found
 
+
 def splitButNotQuotes(text):
     text = text.strip()
     split = []
@@ -40,16 +43,17 @@ def splitButNotQuotes(text):
     quote = False
     lent = len(text)
     while pos < len(text):
-        if text[pos] == '"' :
+        if text[pos] == '"':
             quote = not quote
 
-        if (text[pos] == ' ' and quote == False) or pos == len(text)-1:
+        if (text[pos] == ' ' and quote == False) or pos == len(text) - 1:
             split.append(str)
             str = ""
         else:
             str = str + text[pos]
         pos += 1
     return split
+
 
 def allFilters():
     dir = 'filters/'

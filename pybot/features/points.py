@@ -3,6 +3,7 @@ import threading
 import time
 import pybot.globals as globals
 
+
 class Points:
     def __init__(self, con, chatters, settings, data):
         self.con = con
@@ -12,7 +13,7 @@ class Points:
 
         con.addHook(self.hook)
         threading.Thread(target=self.pointsCheck).start()
-        #thread.start_new_thread(self.pointsCheck, ())
+        # thread.start_new_thread(self.pointsCheck, ())
 
     def pointsCheck(self):
         if globals.data.points:

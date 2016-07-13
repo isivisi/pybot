@@ -4,15 +4,16 @@ from distutils.command import bdist as build_dist
 import pip
 import os
 
-#os.chdir(os.path.dirname(__file__) or '.')
+# os.chdir(os.path.dirname(__file__) or '.')
 
-#scripts = ["pybot"] # bin/pybot"]
-#if os.name == "nt":
+# scripts = ["pybot"] # bin/pybot"]
+# if os.name == "nt":
 #    scripts += ["bin/pybot.bat"]
 
 get = {"https://raw.githubusercontent.com/nnnick/Chart.js/master/Chart.min.js": "pybot//web//Chart.min.js",
        "https://raw.githubusercontent.com/dhg/Skeleton/master/css/normalize.css": "pybot//web//css//normalize.css",
        "https://raw.githubusercontent.com/dhg/Skeleton/master/css/skeleton.css": "pybot//web//css//skeleton.css"}
+
 
 def pysetup():
     print("Pybot is setting up...")
@@ -36,13 +37,15 @@ def pysetup():
             print(loc + " Already exists.")
     print("Pybot ready to build")
 
+
 # custom build
 class build(build_module.build):
-  def run(self):
-    pysetup()
-    build_module.build.run(self)
+    def run(self):
+        pysetup()
+        build_module.build.run(self)
 
-#class bdist(build_dist.bdist):
+
+# class bdist(build_dist.bdist):
 #    def run(self):
 #        pysetup()
 #        build_dist.bdist.run(self)
@@ -57,11 +60,11 @@ setup(
         'tornado',
         'requests'
     ],
-    package_data = {
-        "pybot" : ["web/Chart.min.js",
-                         "web/css/*",
-                         "web/images/*",
-                         "web/templates/*"]
+    package_data={
+        "pybot": ["web/Chart.min.js",
+                  "web/css/*",
+                  "web/images/*",
+                  "web/templates/*"]
     },
     include_package_data=True,
     version='0.1.4',
@@ -78,9 +81,9 @@ setup(
             'pybot = pybot:main'
         ]
     },
-    test_suite = 'pybot.tests',
+    test_suite='pybot.tests',
     cmdclass={
         'build': build
-        #'bdist': bdist
+        # 'bdist': bdist
     }
 )

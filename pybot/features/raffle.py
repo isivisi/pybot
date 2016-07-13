@@ -7,12 +7,13 @@ import random
 import pybot.pybotextra
 import pybot.globals
 
+
 class Raffle:
     def __init__(self, conn, data, params):
         self.conn = conn
         self.data = pybot.globals.data
         self.users = []
-        self.params = {"name":"", "trigger":"!joinraffle", "cost":0, "minpoints":0}
+        self.params = {"name": "", "trigger": "!joinraffle", "cost": 0, "minpoints": 0}
         conn.addHook(self.hook)
 
         for pair in params:
@@ -25,7 +26,7 @@ class Raffle:
         conn.msg("%s has begun! to join say %s in chat" % (self.params["name"], self.params["trigger"]))
 
     def chooseWinner(self):
-        winner = self.users[random.randint(0, len(self.users)-1)]
+        winner = self.users[random.randint(0, len(self.users) - 1)]
         self.conn.msg("The winner is: " + winner)
         return winner
 
@@ -45,7 +46,8 @@ class Raffle:
                     userPoints = 0
                     self.data.points[name] = 0
 
-                if userPoints >= int(self.params["minpoints"]) and userPoints >= int(self.params["cost"]) and name not in self.users:
+                if userPoints >= int(self.params["minpoints"]) and userPoints >= int(
+                        self.params["cost"]) and name not in self.users:
                     self.users.append(name)
                     self.data.points[name] -= int(self.params["cost"])
                     self.data.save()

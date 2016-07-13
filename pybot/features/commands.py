@@ -6,6 +6,7 @@ import pybot.globals as globals
 
 PWD = "/var/www/html/pybot"
 
+
 class Command:
     def __init__(self, trigger, args, message, permissions):
         self.trigger = trigger
@@ -25,6 +26,7 @@ class Command:
     def getMessage(self):
         return self.message
 
+
 class Commands:
     def __init__(self, con):
         self.commands = []
@@ -33,7 +35,7 @@ class Commands:
         self.getCommands()
         con.addHook(self.hook)
 
-    #def checkForCustomCommand
+    # def checkForCustomCommand
 
     def getCommands(self):
         commands = globals.data.commands
@@ -70,7 +72,7 @@ class Commands:
                     break
 
             if pybot.pybotextra.checkIfCommand(text, "!command", "add"):
-                #split = re.split(ur'[^\s"\']+|"([^"]*)"|\'([^\']*)\'', text)
+                # split = re.split(ur'[^\s"\']+|"([^"]*)"|\'([^\']*)\'', text)
                 if (self.con.isMod(name)):
                     split = pybot.pybotextra.splitButNotQuotes(text)
                     if len(split) >= 5:
