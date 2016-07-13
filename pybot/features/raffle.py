@@ -4,12 +4,13 @@
 import threading
 import time
 import random
-from pybot.pybotextra import *
+import pybot.pybotextra
+import pybot.globals
 
 class Raffle:
     def __init__(self, conn, data, params):
         self.conn = conn
-        self.data = globals.data
+        self.data = pybot.globals.data
         self.users = []
         self.params = {"name":"", "trigger":"!joinraffle", "cost":0, "minpoints":0}
         conn.addHook(self.hook)
@@ -36,7 +37,7 @@ class Raffle:
             name = msg.replace(':', '').split('!')[0].replace('\n\r', '')
             text = msg.split("PRIVMSG")[1].replace('%s :' % con.channel, '')
 
-            if checkIfCommand(text, self.params["trigger"]):
+            if pybot.pybotextra.checkIfCommand(text, self.params["trigger"]):
                 # do they meet the minimum user requirments?
                 try:
                     userPoints = self.data.points[name]

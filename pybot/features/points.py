@@ -1,7 +1,6 @@
-
+import pybot.pybotextra
 import threading
 import time
-from pybot.pybotextra import *
 import pybot.globals as globals
 
 class Points:
@@ -31,7 +30,7 @@ class Points:
             name = msg.replace(':', '').split('!')[0].replace('\n\r', '')
             text = msg.split("PRIVMSG")[1].replace('%s :' % con.channel, '')
 
-            if checkIfCommand(text, "!points"):
+            if pybot.pybotextra.checkIfCommand(text, "!points"):
                 try:
                     con.msg(name + ", you have " + str(con.data.points[name]) + " points.")
                 except:
