@@ -18,6 +18,8 @@ from pybot.pybotextra import *
 from pybot.features.raffle import Raffle
 from pybot.features.commands import Commands
 from pybot.features.points import Points
+from pybot.features.linkgrabber import Linkgrabber
+from pybot.features.quotes import Quotes
 from pybot.web import pybot_web
 import pybot.globals as globals
 
@@ -43,6 +45,12 @@ def main():
     if (toBool(settings.config['points']['enabled'])):
         points = Points(con, con.chatters, settings, data)
 
+    if (toBool(settings.config['features']['linkgrabber'])):
+        linkgrabber = Linkgrabber(con)
+
+    if (toBool(settings.config['features']['quotes'])):
+        quotes = Quotes(con)
+
     # start connection in new thread
     #thread.start_new_thread(con.connect, ())
     threading.Thread(target=con.connect).start()
@@ -61,7 +69,6 @@ def main():
     exit()
 
 # Once the irc connection is made it dumps the live feed here along with any events it finds
-#TODO: create a feedHandler class to deal with specific feed events to clean stuff up
 def feed(con, msg, event):
     #print msg
     if event == "server_cantchannel" or event == "server_lost": # couldn't connect to channel or lost connection, retry connection
@@ -114,48 +121,6 @@ def feed(con, msg, event):
                 con.addMode(cmd_args[2], "+permit")
             else:
                 con.msg('%s, you do not have access to this command.' % name)
-
-        elif checkIfCommand(text, "!command add"):
-            if con.isMod(name):
-                trigger = msg.split(' ')[2]
-                text = msg.split(' ')[3]
-                permissions = msg.split(' ')[4].replace('\n\r', '')
-                cmd = con.getCmdControl()
-                cmd.addCommand(trigger, text, permissions)
-            else:
-                con.msg('%s, you do not have access to this command.' % name)
-        elif checkIfCommand(text, "!linkgrabber"):
-            if con.isMod(name):
-                if (con.linkgrabber):
-                    con.linkgrabber = False
-                    con.msg("Link grabber has been disabled!")
-                else:
-                    if toBool(globals.settings.config['features']['linkgrabber']):
-                        con.linkgrabber = True
-                        con.msg("Link grabber has been enabled! post your links!")
-            else:
-                con.msg('%s, you do not have access to this command.' % name)
-
-        elif checkIfCommand(text, "!quote"):
-            if toBool(globals.settings.config['features']['quotes']):
-                quote = text.split("quote", 1)
-                if (len(quote) > 1 and quote[1] != ''):
-                    print(quote)
-                    con.addQuote(name, quote[1])
-                    con.msg("Quote as been added.")
-                else:
-                    if (con.getRandomQuote()):
-                        con.msg(con.getRandomQuote())
-
-        elif checkIfCommand(text, "!linkban"):
-            cmd_args = text.split(" ")
-            if con.isMod(name):
-                #try:
-                con.linkBan(cmd_args[2])
-                #except:
-                #    con.msg("%s, syntax: !plinkban <name>" % name)
-            else:
-                con.msg("%s, you do not have access to this command." % name)
 
         # user message for console
         if (con.isMod(name)):

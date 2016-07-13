@@ -4,7 +4,7 @@
 import threading
 import time
 import random
-from pybotextra import *
+from pybot.pybotextra import *
 
 class Raffle:
     def __init__(self, conn, data, params):

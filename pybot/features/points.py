@@ -1,8 +1,8 @@
 
 import threading
 import time
-from pybotextra import *
-import globals
+from pybot.pybotextra import *
+import pybot.globals as globals
 
 class Points:
     def __init__(self, con, chatters, settings, data):
