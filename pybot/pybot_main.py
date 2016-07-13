@@ -1,4 +1,3 @@
-
 # Pybot twitch irc bot
 # Pybot is designed to monitor and admin your twitch chat
 
@@ -13,7 +12,7 @@ import os
 os.chdir(os.path.dirname(__file__) or '.')
 
 from pybot.data import *
-from pybot.irc import irc # yea its dumb
+from pybot.irc import irc  # yea its dumb
 from pybot.pybotextra import *
 from pybot.features.raffle import Raffle
 from pybot.features.commands import Commands
@@ -28,9 +27,12 @@ PYBOT_VERSION = {"status": "BETA", "version": 0, "build": 121}
 
 PWD = os.getcwd()
 
+
 def main():
     settings = globals.settings
-    pybotPrint("PYBOT %s VERSION %s BUILD %s" % (PYBOT_VERSION["status"], PYBOT_VERSION["version"], PYBOT_VERSION["build"]), "usermsg")
+    pybotPrint(
+        "PYBOT %s VERSION %s BUILD %s" % (PYBOT_VERSION["status"], PYBOT_VERSION["version"], PYBOT_VERSION["build"]),
+        "usermsg")
 
     if len(json.loads(settings.config['filters']['activeFilters'])) <= 0:
         pybotPrint("[pybot.main] Running with no filters", "log")
@@ -52,7 +54,7 @@ def main():
         quotes = Quotes(con)
 
     # start connection in new thread
-    #thread.start_new_thread(con.connect, ())
+    # thread.start_new_thread(con.connect, ())
     threading.Thread(target=con.connect).start()
 
     # start web services
@@ -68,10 +70,11 @@ def main():
     pybotPrint("[PYBOT] connection ended", "log")
     exit()
 
+
 # Once the irc connection is made it dumps the live feed here along with any events it finds
 def feed(con, msg, event):
-    #print msg
-    if event == "server_cantchannel" or event == "server_lost": # couldn't connect to channel or lost connection, retry connection
+    # print msg
+    if event == "server_cantchannel" or event == "server_lost":  # couldn't connect to channel or lost connection, retry connection
         pybotPrint("Lost connection")
         con.retry()
 
@@ -84,10 +87,10 @@ def feed(con, msg, event):
         if (name != con.nick):
             # fancy join counter
             joins = getUserData(name)
-            #con.msg("%s has connected to this channel %s time/s" % (name, joins))
+            # con.msg("%s has connected to this channel %s time/s" % (name, joins))
 
             # so it doesnt spam when there are alot of people
-            #if (con.getTotalUsers() <= 2):
+            # if (con.getTotalUsers() <= 2):
             #	con.msg("Welcome to the stream %s!" % name)
             setUserData(name, joins + 1)
 
@@ -96,7 +99,7 @@ def feed(con, msg, event):
         name = msg.replace(':', '').split('!')[0].replace('\n\r', '')
         text = msg.split("PRIVMSG")[1].replace('%s :' % con.channel, '')
 
-        #printHTML( text)
+        # printHTML( text)
 
         if con.isMod(name) == False and name != "jtv":
             con.filter(name, text)
@@ -134,7 +137,8 @@ def feed(con, msg, event):
 
 
 
-    #print msg
+        # print msg
+
 
 # set user data for joins, currently useless
 def setUserData(user, data):
@@ -146,8 +150,7 @@ def getUserData(user):
     return 0
 
 
-
-#while 1:
+# while 1:
 #	conn, addr = s.accept()
 #	data = conn.recv(2048)
 #	if data:

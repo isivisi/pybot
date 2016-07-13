@@ -1,10 +1,11 @@
 # controller for pybot commands
 
 import os
-from pybot.pybotextra import *
+import pybot.pybotextra
 import pybot.globals as globals
 
 PWD = "/var/www/html/pybot"
+
 
 class Command:
     def __init__(self, trigger, args, message, permissions):
@@ -25,6 +26,7 @@ class Command:
     def getMessage(self):
         return self.message
 
+
 class Commands:
     def __init__(self, con):
         self.commands = []
@@ -33,14 +35,14 @@ class Commands:
         self.getCommands()
         con.addHook(self.hook)
 
-    #def checkForCustomCommand
+    # def checkForCustomCommand
 
     def getCommands(self):
         commands = globals.data.commands
         for command in commands:
             split = command.split(',')
             self.commands.append(Command(split[0], split[1], split[2], split[3]))
-        pybotPrint("[pybot.commands] " + str(len(commands)) + " custom commands loaded.")
+            pybot.pybotextra.pybotPrint("[pybot.commands] " + str(len(commands)) + " custom commands loaded.")
 
     def addCommand(self, trigger, args, message, permissions):
         cmd = Command(trigger, args, message, permissions)
@@ -65,21 +67,21 @@ class Commands:
             text = msg.split("PRIVMSG")[1].replace('%s :' % con.channel, '')
 
             for command in self.commands:
-                if checkIfCommand(text, command.trigger, addc=False):
+                if pybot.pybotextra.checkIfCommand(text, command.trigger, addc=False):
                     self.con.msg(command.message)
                     break
 
-            if checkIfCommand(text, "!command", "add"):
-                #split = re.split(ur'[^\s"\']+|"([^"]*)"|\'([^\']*)\'', text)
+            if pybot.pybotextra.checkIfCommand(text, "!command", "add"):
+                # split = re.split(ur'[^\s"\']+|"([^"]*)"|\'([^\']*)\'', text)
                 if (self.con.isMod(name)):
-                    split = splitButNotQuotes(text)
+                    split = pybot.pybotextra.splitButNotQuotes(text)
                     if len(split) >= 5:
                         self.addCommand(split[2], split[3], split[4].replace('"', ''), "")
                         self.con.msg("Command " + split[2] + " added")
                     else:
                         self.con.msg("Invalid syntax")
 
-            if checkIfCommand(text, "!command", "remove"):
+            if pybot.pybotextra.checkIfCommand(text, "!command", "remove"):
                 if (self.con.isMod(name)):
                     split = text.strip().split()
                     if len(split) >= 3:

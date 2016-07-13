@@ -1,8 +1,8 @@
-
+import pybot.pybotextra
 import threading
 import time
-from pybot.pybotextra import *
 import pybot.globals as globals
+
 
 class Points:
     def __init__(self, con, chatters, settings, data):
@@ -13,7 +13,7 @@ class Points:
 
         con.addHook(self.hook)
         threading.Thread(target=self.pointsCheck).start()
-        #thread.start_new_thread(self.pointsCheck, ())
+        # thread.start_new_thread(self.pointsCheck, ())
 
     def pointsCheck(self):
         if globals.data.points:
@@ -31,7 +31,7 @@ class Points:
             name = msg.replace(':', '').split('!')[0].replace('\n\r', '')
             text = msg.split("PRIVMSG")[1].replace('%s :' % con.channel, '')
 
-            if checkIfCommand(text, "!points"):
+            if pybot.pybotextra.checkIfCommand(text, "!points"):
                 try:
                     con.msg(name + ", you have " + str(con.data.points[name]) + " points.")
                 except:

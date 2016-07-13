@@ -3,6 +3,7 @@ import pybot.globals as globals
 from pybot.data import *
 import re
 
+
 class Linkgrabber():
     def __init__(self, conn):
         self.conn = conn
