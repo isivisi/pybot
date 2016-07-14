@@ -26,7 +26,7 @@ class Quotes():
                             con.msg(self.getRandomQuote())
 
     def addQuote(self, name, text):
-        globals.data.quotes.append('"' + text + '" - ' + name)
+        globals.data.quotes.append('"' + text.strip() + '" - ' + name)
         globals.data.save()
 
     def getRandomQuote(self):
