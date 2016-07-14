@@ -42,7 +42,7 @@ class Linkgrabber():
                 if name not in globals.data.linkbanned:
                     if self.webRegex.search(text) is not None:
                         if (globals.settings.config['linkgrabber']['filter'] in text):
-                            globals.data.links[name] = text
+                            globals.data.links[name] = text.strip()
                             globals.data.save()
                             con.msg(name + ", your link has been grabbed.")
 

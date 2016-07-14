@@ -8,10 +8,15 @@ os.chdir('..') # move one back
 src = os.getcwd()
 print(src)
 
+
 currentTest = 0
-def startTest():
+def startTest(msg):
     global currentTest
     currentTest += 1
+    print("\n[TEST %s] %s" % (currentTest, msg,))
+
+def createPrivMsg(user, channel, text):
+    return ":%s!%s@%s.tmi.twitch.tv PRIVMSG #%s :%s" % (user, user, user, channel, text)
 
 def getPyFilesFromDir(dir = ""):
     loc = os.path.join(src, dir)
@@ -19,7 +24,7 @@ def getPyFilesFromDir(dir = ""):
     return [os.path.join(dir, f) for f in os.listdir(loc) if os.path.isfile(os.path.join(loc, f)) and ".py" in f and not ".pyc" in f and not "py." in f] # todo regex
 
 def compileTest():
-    startTest()
+    startTest("SIMPLE SYNTAX TEST")
     print("Filding files...")
     subfolders = [s[0] for s in os.walk(src)]
     files = []
@@ -32,7 +37,7 @@ def compileTest():
         print(file + " compiled with no errors")
 
 def setupTest():
-    startTest()
+    startTest("SETUP CHECK")
     print("Checking if setup was performed correctly...")
 
     print("importing tornado...")
@@ -51,9 +56,7 @@ def setupTest():
 try:
     # Compile code to make sure its syntactically correct
     print("[PYBOT TESTS]\n")
-    print("[TEST 1] SIMPLE SYNTAX TEST")
     compileTest()
-    print("[TEST 2] SETUP CHECK")
     setupTest()
 except AssertionError as e:
     print("[TEST %s] ASSERTION FAILED: %s" % (currentTest, str(e),))
