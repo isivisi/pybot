@@ -45,7 +45,12 @@ pybot.globals.data.links.pop("azAZ09_", None)
 linkgrabber.linkBan("azAZ09_")
 msg = pybot.tests.createPrivMsg("azAZ09_", "test", website)
 irc.hook(irc, msg, "user_privmsg")
-print(pybot.globals.data.links)
 assert ("azAZ09_" not in pybot.globals.data.links.keys()), "Link banned user was able to add a link"
 
-
+pybot.globals.data.linkbanned = []
+pybot.globals.data.links.pop("azAZ09_", None)
+msg = pybot.tests.createPrivMsg("mod", "test", "!linkban azAZ09_")
+irc.hook(irc, msg, "user_privmsg")
+msg = pybot.tests.createPrivMsg("azAZ09_", "test", website)
+irc.hook(irc, msg, "user_privmsg")
+assert ("azAZ09_" not in pybot.globals.data.links.keys()), "Link banned user was able to add a link"
