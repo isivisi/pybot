@@ -31,10 +31,10 @@ class Linkgrabber():
             elif checkIfCommand(text, "!linkban"):
                 cmd_args = text.split(" ")
                 if con.isMod(name):
-                    # try:
-                    self.linkBan(cmd_args[2])
-                    # except:
-                    #    con.msg("%s, syntax: !plinkban <name>" % name)
+                    try:
+                        self.linkBan(cmd_args[2])
+                    except:
+                        con.msg("%s, syntax: !plinkban <name>" % name)
                 else:
                     con.msg("%s, you do not have access to this command." % name)
 

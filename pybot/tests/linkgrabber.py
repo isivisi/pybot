@@ -4,17 +4,22 @@ import pybot.tests
 
 pybot.tests.startTest("LINKGRABBER TESTS")
 
+
 class hook():
     def __init__(self):
         self.hook = None
         self.channel = "#test"
         self.lastMsg = ""
+
     def addHook(self, h):
         self.hook = h
+
     def msg(self, msg):
         self.lastMsg = msg
+
     def isMod(self, name):
         return name == "mod"
+
 
 print("Init test...")
 irc = hook()
@@ -51,6 +56,14 @@ pybot.globals.data.linkbanned = []
 pybot.globals.data.links.pop("azAZ09_", None)
 msg = pybot.tests.createPrivMsg("mod", "test", "!linkban azAZ09_")
 irc.hook(irc, msg, "user_privmsg")
+assert ("azAZ09_" in pybot.globals.data.linkbanned), "!linkban command not grabbing name correctly"
+
+# testing if banned user could add link
 msg = pybot.tests.createPrivMsg("azAZ09_", "test", website)
 irc.hook(irc, msg, "user_privmsg")
 assert ("azAZ09_" not in pybot.globals.data.links.keys()), "Link banned user was able to add a link"
+
+# testing !linkban with no args
+msg = pybot.tests.createPrivMsg("mod", "test", "!linkban")
+irc.hook(irc, msg, "user_privmsg")
+assert (irc.lastMsg == "mod, syntax: !plinkban <name>"), "!linkban with no args doesnt display snytax"
