@@ -30,6 +30,10 @@ class Filters(tornado.web.UIModule):
         return self.render_string("templates/filtersmodule.html", data=globals.data, activeFilters=activeFilters,
                                   allfilters=allFilters())
 
+class UserList(tornado.web.UIModule):
+    def render(self):
+        return self.render_string("templates/userlist.html", data=globals.data, chatters=globals.con.chatters)
+
 
 # Values take in a list of dictionaries with values (value: #, color:"#F7464A", highlight: "#FF5A5E", label: "")
 # settings is a dictionary with settings for the chart

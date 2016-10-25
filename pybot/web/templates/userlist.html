@@ -1,0 +1,25 @@
+<h4>Mods</h4>
+<table>
+    <th>
+        <td></td>
+    </th>
+
+    {% for u in chatters.mods %}
+        <tr>
+            <td> {{ escape(u) }}</td>
+        </tr>
+    {% end %}
+</table>
+
+<h4>Viewers</h4>
+<table>
+    <th>
+        <td></td>
+    </th>
+
+    {% for u in chatters.viewers %}
+        <tr>
+            <td> {{ escape(u) }}</td>
+        </tr>
+    {% end %}
+</table>
