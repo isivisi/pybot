@@ -1,3 +1,11 @@
+<h4> Viewers over time </h4>
+
+{% set values = [] %}
+{% for uinfo in data.activeUsersOverTime.keys() %}
+    {% set values.append({"value": str(data.activeUsersOverTime[uinfo]), "color": "#F7464A", "highlight": "#FF5A5E", "label": str(uinfo)}) %}
+{% end %}
+{% module Chart('line', values) %}
+
 <h4>Mods</h4>
 <table>
     <th>

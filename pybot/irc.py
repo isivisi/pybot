@@ -11,6 +11,7 @@ import time
 import urllib.request
 import traceback
 import pybot.globals as globals
+import time
 
 from pybot.pybotextra import *
 
@@ -52,6 +53,10 @@ class chatters:
                 self.chatterCount = chatInfo["chatter_count"]
                 self.mods = chatInfo["chatters"]["moderators"]
                 self.viewers = chatInfo["chatters"]["viewers"]
+
+                # add total users to list
+                globals.data.activeUsersOverTime[time.strftime("%d %H:%M")] = len(self.mods) + len(self.viewers)
+                globals.data.save()
 
                 for user in self.mods:
                     self.con.addMode(user, "+o")
