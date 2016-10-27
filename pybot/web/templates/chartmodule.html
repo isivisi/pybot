@@ -15,10 +15,14 @@
         data: {
             labels: [ {% for value in values %} '{{ escape(value["label"]) }}', {% end %} "empty"],
             datasets: [{
+
+                {% for dataset in datasets.keys() %} {{ escape(dataset) }}: '{{ escape(datasets[dataset]) }}', {% end %}
+
                 label: 'Chart',
                 data: [ {% for value in values %} {{ escape(value["value"]) }}, {% end %} 0],
-                backgroundColor: [ {% for value in values %} 'rgba(rgba(0, 0, 255, 0.2)', {% end %} 'rgba(255,255,255,0)'],
-                borderColor: [ {% for value in values %} 'rgba(rgba(0, 0, 255, 1)', {% end %} 'rgba(255,255,255,0)'],
+
+                //backgroundColor: [ {% for value in values %} 'rgba(rgba(0, 0, 255, 0.2)', {% end %} 'rgba(255,255,255,0)'],
+                //borderColor: [ {% for value in values %} 'rgba(rgba(0, 0, 255, 1)', {% end %} 'rgba(255,255,255,0)'],
                 borderWidth: 1
             }]
         },

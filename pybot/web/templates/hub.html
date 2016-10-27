@@ -66,6 +66,9 @@
                 <div class="row u-full-width">
                     <div class="twelve columns pybutton"><a href="/hub">Hub</a></div>
                 </div>
+                <div class ="row u-full-width">
+                    <div class="twelve columns pybutton"><a href="/hub/userstats">User Stats</a></div>
+                </div>
                 <div class="row u-full-width">
                     <div class="twelve columns pybutton"><a href="/hub/filters">Filters</a></div>
                 </div>
@@ -151,8 +154,9 @@
                 {% if page == "chart" %}
                     {% module Chart() %}
                 {% end %}
-
-                {% module UserList() %}
+                {% if page == "userstats" %}
+                    {% module UserList() %}
+                {% end %}
 			</div>
         </div>
 	</div>
