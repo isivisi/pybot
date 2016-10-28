@@ -12,7 +12,7 @@
         </thread>
         <tbody>
             {% if top > 0 %}
-                {% for name in sorted(data.points)[:top] %}
+                {% for name in sorted(data.points, key=data.points.get, reverse=True)[:top] %}
                 <tr>
                     <td> {{ escape(name) }} </td>
                     <td> {{ escape(str(data.points[name])) }} </td>

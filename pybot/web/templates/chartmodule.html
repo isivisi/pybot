@@ -5,18 +5,20 @@
     <div class="twelve columns u-full-width">
         <canvas id="chart" width="150" height="150"></canvas>
     </div>
+    <div class="twelve columns u-full-width"></div>
 </div>
 
 <script>
-    var ctx = document.getElementById("chart").getContext("2d");
+    var ctx = document.getElementById("chart");
 
     var chart = new Chart(ctx, {
         type: '{{ escape(type) }}',
         data: {
-            labels: [ {% for value in values %} '{{ escape(value["label"]) }}', {% end %} "empty"],
+            labels: [ {% for value in values %} '{{ escape(value["label"]) }}', {% end %}],
             datasets: [{
 
                 {% for dataset in datasets.keys() %} {{ escape(dataset) }}: '{{ escape(datasets[dataset]) }}', {% end %}
+                {% for dataset in datasetsInt.keys() %} {{ escape(dataset) }}: {{ escape(datasetsInt[dataset]) }}, {% end %}
 
                 label: 'Chart',
                 data: [ {% for value in values %} {{ escape(value["value"]) }}, {% end %} 0],
@@ -26,11 +28,11 @@
                 borderWidth: 1
             }]
         },
-        options: {
+        options:{
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero:true
+                        stepSize: 1
                     }
                 }]
             }

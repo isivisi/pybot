@@ -12,6 +12,7 @@ import urllib.request
 import traceback
 import pybot.globals as globals
 import time
+import math
 
 from pybot.pybotextra import *
 
@@ -55,7 +56,7 @@ class chatters:
                 self.viewers = chatInfo["chatters"]["viewers"]
 
                 # add total users to list
-                globals.data.activeUsersOverTime[time.strftime("%d %H:%M")] = len(self.mods) + len(self.viewers)
+                globals.data.activeUsersOverTime[time.strftime("%d:%H:%M")] = max(0, (len(self.mods) + len(self.viewers)) - 1) # -1 because bot is always a user
                 globals.data.save()
 
                 for user in self.mods:
