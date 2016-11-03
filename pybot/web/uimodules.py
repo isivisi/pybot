@@ -2,6 +2,7 @@ import tornado
 import pybot.globals as globals
 from pybot.pybotextra import allFilters
 import json
+import math
 
 
 class Raffle(tornado.web.UIModule):
@@ -43,4 +44,4 @@ class Chart(tornado.web.UIModule):
         #values.append({"value": "25", "color": "#F7464A", "highlight": "#FF5A5E", "label": "test1"})
         #values.append({"value": "75", "color": "#ffffff", "highlight": "#FF5A5E", "label": "test2"})
 
-        return self.render_string("templates/chartmodule.html", datasets=datasets, datasetsInt=datasetsInt, type=type, values=values, settings=settings)
+        return self.render_string("templates/chartmodule.html", datasets=datasets, datasetsInt=datasetsInt, type=type, values=values, settings=settings, width=width, height=height)

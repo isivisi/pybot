@@ -3,13 +3,15 @@
 
 <div class="row">
     <div class="twelve columns u-full-width">
-        <canvas id="chart" width="150" height="150"></canvas>
+        <canvas id="chart"></canvas>
     </div>
     <div class="twelve columns u-full-width"></div>
 </div>
 
 <script>
-    var ctx = document.getElementById("chart");
+    var ctx = document.getElementById("chart").getContext("2d");
+    ctx.canvas.width = {{ width }};
+    ctx.canvas.height = {{ height }};
 
     var chart = new Chart(ctx, {
         type: '{{ escape(type) }}',
@@ -32,7 +34,10 @@
             scales: {
                 yAxes: [{
                     ticks: {
-                        stepSize: 1
+                        // get highest value in list of values to get proper step size
+                        {% set listvals = [] %}
+                        {% for value in values %} {% set listvals.append(int(value["value"])) %} {% end %}
+                        stepSize: Math.ceil({{ max(listvals) / 5}})
                     }
                 }]
             }
