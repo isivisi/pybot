@@ -19,6 +19,7 @@ from pybot.features.commands import Commands
 from pybot.features.points import Points
 from pybot.features.linkgrabber import Linkgrabber
 from pybot.features.quotes import Quotes
+from pybot.features.loopedads import Loopedads
 from pybot.web import pybot_web
 import pybot.globals as globals
 
@@ -52,6 +53,9 @@ def main():
 
     if (toBool(settings.config['features']['quotes'])):
         quotes = Quotes(con)
+
+    if (toBool(settings.config['features']['quotes'])):
+        ads = Loopedads()
 
     # start connection in new thread
     # thread.start_new_thread(con.connect, ())

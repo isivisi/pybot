@@ -10,7 +10,7 @@ import os
 # if os.name == "nt":
 #    scripts += ["bin/pybot.bat"]
 
-get = {"https://raw.githubusercontent.com/nnnick/Chart.js/master/Chart.min.js": "pybot//web//Chart.min.js",
+get = {"https://github.com/chartjs/Chart.js/releases/download/v2.3.0/Chart.min.js": "pybot//web//Chart.min.js",
        "https://raw.githubusercontent.com/dhg/Skeleton/master/css/normalize.css": "pybot//web//css//normalize.css",
        "https://raw.githubusercontent.com/dhg/Skeleton/master/css/skeleton.css": "pybot//web//css//skeleton.css"}
 
