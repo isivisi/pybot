@@ -11,7 +11,7 @@ import pip
 
 pyLoc = sys.executable
 
-dependencies = {"tornado":"tornado>=4.3", "requests":"requests>=2.9.1"}
+dependencies = {"tornado":"tornado==4.3", "requests":"requests>=2.9.1"}
 get = { "https://raw.githubusercontent.com/nnnick/Chart.js/master/Chart.min.js":"web\\Chart.min.js",
         "https://raw.githubusercontent.com/dhg/Skeleton/master/css/normalize.css":"web\\css\\normalize.css",
         "https://raw.githubusercontent.com/dhg/Skeleton/master/css/skeleton.css":"web\\css\\skeleton.css" }
