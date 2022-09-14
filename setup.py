@@ -56,6 +56,7 @@ setup(
     author='John Iannandrea',
     author_email='jiannandrea@gmail.com',
     url='http://github.com/isivisi/pybot',
+    python_requires='>=3.5, <3.10',
     install_requires=[
         'tornado',
         'requests'
