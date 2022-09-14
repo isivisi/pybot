@@ -58,7 +58,7 @@ setup(
     url='http://github.com/isivisi/pybot',
     python_requires='>=3.5, <3.10',
     install_requires=[
-        'tornado',
+        'tornado==4.3',
         'requests'
     ],
     package_data={
@@ -68,7 +68,7 @@ setup(
                   "web/templates/*"]
     },
     include_package_data=True,
-    version='0.1.4',
+    version='0.1.4-2',
     packages=['pybot', "pybot/web", "pybot/globals", "pybot/filters", "pybot/features", "pybot/data", "pybot/tests"],
     zip_safe=False,
     license='GNU',
